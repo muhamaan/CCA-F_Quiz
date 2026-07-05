@@ -1,0 +1,432 @@
+[
+  {
+    "id": "d4-4.1-001",
+    "domain": 4,
+    "task": "4.1",
+    "type": "knowledge",
+    "question": "\"Flag comments only when claimed behavior contradicts actual code behavior\" is better than \"check that comments are accurate\" because it provides ____.",
+    "options": ["explicit criteria instead of vague instructions", "a shorter prompt", "a friendlier tone", "broader coverage of comment styles"],
+    "answerIndex": 0,
+    "explanation": "Explicit criteria define precisely which findings to report, improving precision and reducing false positives. Vague instructions leave the boundary to interpretation. Prompt length, tone, and coverage breadth are not the point."
+  },
+  {
+    "id": "d4-4.1-002",
+    "domain": 4,
+    "task": "4.1",
+    "type": "knowledge",
+    "question": "General instructions like \"be conservative\" or \"only report high-confidence findings\" typically fail to improve precision because they ____.",
+    "options": [
+      "lack the specific categorical criteria the model needs to decide what to skip",
+      "exceed the system prompt length limit",
+      "conflict with tool descriptions",
+      "only work with extended thinking enabled"
+    ],
+    "answerIndex": 0,
+    "explanation": "Confidence-based filtering fails compared to specific categorical criteria—defining which issue categories to report (bugs, security) versus skip (minor style, local patterns). Length limits, tool conflicts, and extended thinking are unrelated."
+  },
+  {
+    "id": "d4-4.1-003",
+    "domain": 4,
+    "task": "4.1",
+    "type": "knowledge",
+    "question": "High false-positive rates in some review categories are dangerous because they ____.",
+    "options": [
+      "undermine developer trust in the accurate categories too",
+      "increase API costs prohibitively",
+      "cause the CI pipeline to time out",
+      "make the model refuse subsequent reviews"
+    ],
+    "answerIndex": 0,
+    "explanation": "False positives erode developer trust across the board: once developers see noisy findings in one category, they discount even the accurate ones. Cost, timeouts, and refusals are not the documented risk."
+  },
+  {
+    "id": "d4-4.1-004",
+    "domain": 4,
+    "task": "4.1",
+    "type": "skill",
+    "question": "One review category produces mostly false positives and developers are losing trust. A reasonable immediate action is to ____.",
+    "options": [
+      "temporarily disable that category while improving its prompt",
+      "disable the entire automated review",
+      "double the severity threshold across all categories",
+      "hide findings from developers until accuracy improves"
+    ],
+    "answerIndex": 0,
+    "explanation": "Temporarily disabling high false-positive categories restores trust while you improve prompts for those categories. Disabling everything discards value from accurate categories, global threshold changes distort other categories, and hiding findings defeats the review's purpose."
+  },
+  {
+    "id": "d4-4.1-005",
+    "domain": 4,
+    "task": "4.1",
+    "type": "skill",
+    "question": "To achieve consistent severity classification in review output, define explicit severity criteria with ____.",
+    "options": [
+      "concrete code examples for each severity level",
+      "a numeric scoring rubric only",
+      "a single catch-all severity",
+      "post-hoc manual relabeling"
+    ],
+    "answerIndex": 0,
+    "explanation": "Explicit severity criteria illustrated with concrete code examples per level anchor the model's classification. Numeric rubrics without examples remain ambiguous, one severity level loses information, and manual relabeling does not fix generation."
+  },
+  {
+    "id": "d4-4.2-001",
+    "domain": 4,
+    "task": "4.2",
+    "type": "knowledge",
+    "question": "When detailed instructions alone produce inconsistently formatted output, the most effective technique is ____.",
+    "options": ["few-shot examples", "raising max_tokens", "lowering temperature to 0", "splitting the prompt into two turns"],
+    "answerIndex": 0,
+    "explanation": "Few-shot examples are the most effective technique for achieving consistently formatted, actionable output when instructions alone fall short—they demonstrate the desired format directly. Sampling parameters and turn-splitting do not demonstrate format."
+  },
+  {
+    "id": "d4-4.2-002",
+    "domain": 4,
+    "task": "4.2",
+    "type": "skill",
+    "question": "For ambiguous scenarios, effective few-shot examples should show ____.",
+    "options": [
+      "the reasoning for why one action was chosen over plausible alternatives",
+      "only the final answers without context",
+      "as many examples as fit in context",
+      "randomly sampled production transcripts"
+    ],
+    "answerIndex": 0,
+    "explanation": "Creating 2-4 targeted examples that show reasoning for why one action beat plausible alternatives teaches the decision boundary, enabling generalization to novel patterns. Bare answers, example dumps, and unfiltered transcripts do not convey the judgment."
+  },
+  {
+    "id": "d4-4.2-003",
+    "domain": 4,
+    "task": "4.2",
+    "type": "knowledge",
+    "question": "Few-shot examples enable the model to ____ rather than matching only pre-specified cases.",
+    "options": [
+      "generalize judgment to novel patterns",
+      "memorize the training distribution",
+      "cache repeated answers",
+      "skip validation steps"
+    ],
+    "answerIndex": 0,
+    "explanation": "Well-chosen few-shot examples convey the underlying judgment, letting the model generalize to patterns not shown in the examples. They are not memorization, caching, or a substitute for validation."
+  },
+  {
+    "id": "d4-4.2-004",
+    "domain": 4,
+    "task": "4.2",
+    "type": "skill",
+    "question": "Extraction returns empty or null for required fields on documents with unusual layouts. A targeted fix is ____.",
+    "options": [
+      "adding few-shot examples showing correct extraction from documents with varied formats",
+      "making all fields required in the schema",
+      "retrying the same request several times",
+      "truncating documents to a standard length"
+    ],
+    "answerIndex": 0,
+    "explanation": "Few-shot examples demonstrating correct handling of varied document structures (inline citations vs bibliographies, informal measurements) reduce hallucination and missed extractions. Forcing required fields encourages fabrication, and blind retries or truncation do not teach the model the formats."
+  },
+  {
+    "id": "d4-4.2-005",
+    "domain": 4,
+    "task": "4.2",
+    "type": "skill",
+    "question": "To reduce false positives in code review while preserving generalization, include few-shot examples that ____.",
+    "options": [
+      "distinguish acceptable code patterns from genuine issues",
+      "show only true-positive findings",
+      "list every forbidden API by name",
+      "demonstrate the longest possible finding format"
+    ],
+    "answerIndex": 0,
+    "explanation": "Examples contrasting acceptable patterns with genuine issues teach the boundary between them, cutting false positives while still generalizing. Only positive findings teach no boundary, exhaustive API lists match only pre-specified cases, and format length is irrelevant."
+  },
+  {
+    "id": "d4-4.3-001",
+    "domain": 4,
+    "task": "4.3",
+    "type": "knowledge",
+    "question": "The most reliable approach for guaranteed schema-compliant structured output is ____.",
+    "options": [
+      "tool use with JSON schemas",
+      "asking politely for valid JSON in the prompt",
+      "wrapping the output in markdown code fences",
+      "post-processing with regex fixes"
+    ],
+    "answerIndex": 0,
+    "explanation": "Defining a tool whose input schema is your desired output structure and extracting from the tool_use response eliminates JSON syntax errors. Prompt requests, code fences, and regex repairs are all best-effort and unreliable."
+  },
+  {
+    "id": "d4-4.3-002",
+    "domain": 4,
+    "task": "4.3",
+    "type": "knowledge",
+    "question": "With tool_choice: \"auto\", the model ____.",
+    "options": [
+      "may return conversational text instead of calling a tool",
+      "must call exactly one tool",
+      "must call the first tool in the list",
+      "cannot return any text at all"
+    ],
+    "answerIndex": 0,
+    "explanation": "\"auto\" lets the model decide whether to call a tool, so it may return plain text instead. \"any\" forces some tool call, and forced selection ({\"type\": \"tool\", \"name\": \"...\"}) mandates a specific tool."
+  },
+  {
+    "id": "d4-4.3-003",
+    "domain": 4,
+    "task": "4.3",
+    "type": "knowledge",
+    "question": "Strict JSON schemas via tool use eliminate syntax errors but do not prevent ____.",
+    "options": [
+      "semantic errors such as line items that don't sum to the stated total",
+      "missing required fields",
+      "invalid JSON escape sequences",
+      "unknown top-level keys"
+    ],
+    "answerIndex": 0,
+    "explanation": "Schema enforcement guarantees structure, not meaning: values can still be semantically wrong—line items not summing to totals, or values placed in the wrong fields. Required fields, escaping, and unknown keys are exactly what the schema does enforce."
+  },
+  {
+    "id": "d4-4.3-004",
+    "domain": 4,
+    "task": "4.3",
+    "type": "skill",
+    "question": "Source documents sometimes lack a piece of information. To prevent the model from fabricating values, the corresponding schema field should be ____.",
+    "options": [
+      "optional (nullable)",
+      "required with a default string",
+      "an enum without an escape value",
+      "duplicated under two names"
+    ],
+    "answerIndex": 0,
+    "explanation": "Designing fields as optional or nullable lets the model return null when the information is absent, preventing fabrication to satisfy required fields. Required-with-default and closed enums push the model to invent plausible values."
+  },
+  {
+    "id": "d4-4.3-005",
+    "domain": 4,
+    "task": "4.3",
+    "type": "skill",
+    "question": "For extensible categorization, a recommended enum design adds \"unclear\" for ambiguous cases and ____.",
+    "options": [
+      "\"other\" plus a detail string field",
+      "a free-text category field only",
+      "a numeric category ID space",
+      "one enum value per historical document"
+    ],
+    "answerIndex": 0,
+    "explanation": "The \"other\" + detail string pattern keeps the enum stable while capturing novel categories with specifics in the detail field. Free-text-only categories lose consistency, and numeric IDs or per-document values defeat categorization."
+  },
+  {
+    "id": "d4-4.3-006",
+    "domain": 4,
+    "task": "4.3",
+    "type": "skill",
+    "question": "Multiple extraction schemas exist and the incoming document type is unknown. To guarantee structured output while letting the model pick the right schema, set ____.",
+    "options": [
+      "tool_choice: \"any\"",
+      "tool_choice: \"auto\"",
+      "tool_choice: {\"type\": \"tool\", \"name\": \"extract_generic\"}",
+      "no tool_choice at all"
+    ],
+    "answerIndex": 0,
+    "explanation": "tool_choice: \"any\" guarantees the model calls a tool (structured output) while letting it choose which extraction schema fits the document. \"auto\" (or no setting, which defaults to auto) permits a text reply, and forcing one named tool removes the model's ability to pick the right schema."
+  },
+  {
+    "id": "d4-4.4-001",
+    "domain": 4,
+    "task": "4.4",
+    "type": "knowledge",
+    "question": "In retry-with-error-feedback, the retry prompt should include the original document, the failed extraction, and ____.",
+    "options": [
+      "the specific validation errors",
+      "a higher temperature setting",
+      "a different model ID",
+      "an apology instruction"
+    ],
+    "answerIndex": 0,
+    "explanation": "Appending the specific validation errors guides the model toward correcting exactly what failed. Temperature and model changes do not tell the model what was wrong, and tone instructions are irrelevant to correction."
+  },
+  {
+    "id": "d4-4.4-002",
+    "domain": 4,
+    "task": "4.4",
+    "type": "knowledge",
+    "question": "Retries are ineffective when ____.",
+    "options": [
+      "the required information is simply absent from the source document",
+      "the output had a format mismatch",
+      "the output had a structural error",
+      "the validation error message is detailed"
+    ],
+    "answerIndex": 0,
+    "explanation": "No number of retries can extract information that does not exist in the source—for example, data that lives only in an external document not provided. Format mismatches and structural output errors, by contrast, are exactly the cases retries with error feedback can fix."
+  },
+  {
+    "id": "d4-4.4-003",
+    "domain": 4,
+    "task": "4.4",
+    "type": "skill",
+    "question": "Adding a detected_pattern field to structured review findings enables ____.",
+    "options": [
+      "systematic analysis of false positive patterns when developers dismiss findings",
+      "faster JSON parsing",
+      "automatic severity escalation",
+      "compression of the findings payload"
+    ],
+    "answerIndex": 0,
+    "explanation": "Tracking which code constructs trigger findings lets you analyze dismissal patterns systematically—if developers keep dismissing findings with a particular detected_pattern, that category needs prompt work. It is a feedback-loop design tool, not a parsing or severity mechanism."
+  },
+  {
+    "id": "d4-4.4-004",
+    "domain": 4,
+    "task": "4.4",
+    "type": "skill",
+    "question": "A self-correction validation flow for invoices can extract calculated_total alongside stated_total in order to ____.",
+    "options": [
+      "flag discrepancies between the two values",
+      "double the extraction accuracy metric",
+      "satisfy the JSON schema requirements",
+      "reduce the number of API calls"
+    ],
+    "answerIndex": 0,
+    "explanation": "Extracting a calculated_total next to the stated_total lets the pipeline flag documents where they disagree—catching semantic errors schemas cannot. Adding conflict_detected booleans for inconsistent source data follows the same design. It is not about metrics, schema satisfaction, or call counts."
+  },
+  {
+    "id": "d4-4.4-005",
+    "domain": 4,
+    "task": "4.4",
+    "type": "knowledge",
+    "question": "Tool use eliminates schema syntax errors, so remaining validation work should focus on ____ errors.",
+    "options": ["semantic", "encoding", "transport", "authentication"],
+    "answerIndex": 0,
+    "explanation": "The distinction is between schema syntax errors (eliminated by tool use) and semantic validation errors—values that don't sum, wrong field placement—which still require validation logic, self-correction flows, and retries with error feedback."
+  },
+  {
+    "id": "d4-4.5-001",
+    "domain": 4,
+    "task": "4.5",
+    "type": "knowledge",
+    "question": "The Message Batches API offers a ____ cost saving with up to a 24-hour processing window and no guaranteed latency SLA.",
+    "options": ["50%", "10%", "75%", "90%"],
+    "answerIndex": 0,
+    "explanation": "The Message Batches API provides 50% cost savings in exchange for asynchronous processing that can take up to 24 hours with no latency SLA—suitable for latency-tolerant workloads only."
+  },
+  {
+    "id": "d4-4.5-002",
+    "domain": 4,
+    "task": "4.5",
+    "type": "skill",
+    "question": "A blocking pre-merge check and an overnight technical debt report both use real-time API calls. The right cost optimization is ____.",
+    "options": [
+      "batch processing for the overnight report only; keep real-time for the pre-merge check",
+      "batch processing for both with status polling",
+      "real-time for both to avoid ordering issues",
+      "batch for both with a real-time fallback on timeout"
+    ],
+    "answerIndex": 0,
+    "explanation": "Match the API to latency requirements: batch processing suits non-blocking overnight work, while blocking pre-merge checks need synchronous calls since batches have no latency SLA. Polling does not make batches acceptable for blocking flows, ordering is solved by custom_id, and fallbacks add needless complexity."
+  },
+  {
+    "id": "d4-4.5-003",
+    "domain": 4,
+    "task": "4.5",
+    "type": "knowledge",
+    "question": "A key limitation of the Message Batches API is that it does not support ____ within a single request.",
+    "options": [
+      "multi-turn tool calling",
+      "system prompts",
+      "JSON schema outputs",
+      "requests over 1,000 tokens"
+    ],
+    "answerIndex": 0,
+    "explanation": "The batch API cannot execute tools mid-request and return results for further turns—multi-turn tool calling is unsupported within a single batch request. System prompts and structured outputs work fine, and there is no 1,000-token cap."
+  },
+  {
+    "id": "d4-4.5-004",
+    "domain": 4,
+    "task": "4.5",
+    "type": "skill",
+    "question": "Some documents in a 100-document batch failed because they exceeded context limits. The right recovery is to ____.",
+    "options": [
+      "resubmit only the failed documents (identified by custom_id) after chunking them",
+      "resubmit the entire batch unchanged",
+      "switch the whole workload to the synchronous API",
+      "drop the failed documents from the report"
+    ],
+    "answerIndex": 0,
+    "explanation": "custom_id correlates request/response pairs, so you can identify exactly which documents failed and resubmit only those with appropriate modifications, such as chunking oversized documents. Resubmitting everything wastes cost, and dropping documents loses data."
+  },
+  {
+    "id": "d4-4.5-005",
+    "domain": 4,
+    "task": "4.5",
+    "type": "skill",
+    "question": "Before batch-processing a large document volume, it is cost-effective to ____.",
+    "options": [
+      "refine the prompt on a sample set to maximize first-pass success",
+      "submit the full volume immediately and iterate on failures",
+      "split the volume across multiple API keys",
+      "disable validation to reduce failures"
+    ],
+    "answerIndex": 0,
+    "explanation": "Prompt refinement on a sample set before large-volume batch processing maximizes first-pass success rates and reduces iterative resubmission costs. Iterating on the full volume multiplies cost, extra keys do not improve quality, and disabling validation hides failures rather than preventing them."
+  },
+  {
+    "id": "d4-4.6-001",
+    "domain": 4,
+    "task": "4.6",
+    "type": "knowledge",
+    "question": "Self-review within the same session is limited because the model ____.",
+    "options": [
+      "retains reasoning context from generation, making it less likely to question its own decisions",
+      "cannot re-read its earlier messages",
+      "is blocked from using tools after generating",
+      "loses access to the files it wrote"
+    ],
+    "answerIndex": 0,
+    "explanation": "A model reviewing its own output in-session carries the reasoning that produced the code, biasing it toward its earlier decisions. Independent review instances without that context catch subtle issues more effectively than self-review instructions or extended thinking."
+  },
+  {
+    "id": "d4-4.6-002",
+    "domain": 4,
+    "task": "4.6",
+    "type": "skill",
+    "question": "The recommended way to review freshly generated code is to use ____.",
+    "options": [
+      "a second independent Claude instance without the generator's reasoning context",
+      "the same session with a \"review your work\" instruction",
+      "the same session with extended thinking enabled",
+      "an automated linter only"
+    ],
+    "answerIndex": 0,
+    "explanation": "Independent review instances are more effective at catching subtle issues than self-review instructions or extended thinking in the generating session, because they lack the generator's reasoning bias. Linters catch mechanical issues but not design or logic problems."
+  },
+  {
+    "id": "d4-4.6-003",
+    "domain": 4,
+    "task": "4.6",
+    "type": "skill",
+    "question": "A single-pass review of a 14-file PR gives inconsistent depth and contradictory findings. The fix is to ____.",
+    "options": [
+      "split into per-file local passes plus a separate cross-file integration pass",
+      "require developers to submit smaller PRs",
+      "use a model with a larger context window",
+      "run the same review three times and keep consensus findings"
+    ],
+    "answerIndex": 0,
+    "explanation": "Multi-pass review addresses attention dilution directly: per-file passes give consistent local depth, and an integration pass catches cross-file data flow issues. Burden-shifting to developers, bigger context windows (which don't fix attention quality), and consensus voting (which suppresses intermittently caught real bugs) all miss the root cause."
+  },
+  {
+    "id": "d4-4.6-004",
+    "domain": 4,
+    "task": "4.6",
+    "type": "skill",
+    "question": "Having the model self-report confidence alongside each finding in a verification pass enables ____.",
+    "options": [
+      "calibrated routing of findings to appropriate review paths",
+      "automatic deletion of low-confidence findings",
+      "skipping human review entirely",
+      "faster generation of findings"
+    ],
+    "answerIndex": 0,
+    "explanation": "Confidence self-reporting in verification passes enables calibrated review routing—directing attention where it is most needed. It does not mean auto-deleting findings or eliminating human review, and it does not speed up generation."
+  }
+]

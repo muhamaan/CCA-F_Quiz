@@ -1,0 +1,402 @@
+[
+  {
+    "id": "d3-3.1-001",
+    "domain": 3,
+    "task": "3.1",
+    "type": "knowledge",
+    "question": "The CLAUDE.md configuration hierarchy consists of user-level (~/.claude/CLAUDE.md), project-level, and ____ files.",
+    "options": ["directory-level (subdirectory CLAUDE.md)", "organization-level (cloud-synced)", "branch-level (per git branch)", "model-level (per model ID)"],
+    "answerIndex": 0,
+    "explanation": "The hierarchy is user-level (~/.claude/CLAUDE.md), project-level (.claude/CLAUDE.md or root CLAUDE.md), and directory-level (subdirectory CLAUDE.md files). There are no organization-, branch-, or model-level CLAUDE.md tiers in this hierarchy."
+  },
+  {
+    "id": "d3-3.1-002",
+    "domain": 3,
+    "task": "3.1",
+    "type": "skill",
+    "question": "A new team member is not receiving your team's coding instructions. The most likely diagnosis is that the instructions live in ____.",
+    "options": [
+      "user-level ~/.claude/CLAUDE.md instead of project-level configuration",
+      "the project-level CLAUDE.md, which new members cannot read",
+      "a .claude/rules/ file with too broad a glob",
+      ".mcp.json instead of ~/.claude.json"
+    ],
+    "answerIndex": 0,
+    "explanation": "User-level settings apply only to that user and are not shared via version control. Team-wide instructions must be in project-level configuration so everyone receives them on clone/pull. Project-level CLAUDE.md is exactly what new members would receive, so it is not the failure."
+  },
+  {
+    "id": "d3-3.1-003",
+    "domain": 3,
+    "task": "3.1",
+    "type": "knowledge",
+    "question": "To keep CLAUDE.md modular by referencing external standards files, use the ____ syntax.",
+    "options": ["@import", "#include", "$ref", "<<extends>>"],
+    "answerIndex": 0,
+    "explanation": "The @import syntax references external files from CLAUDE.md—for example, importing only the standards files relevant to each package. #include, $ref, and <<extends>> are not CLAUDE.md mechanisms."
+  },
+  {
+    "id": "d3-3.1-004",
+    "domain": 3,
+    "task": "3.1",
+    "type": "skill",
+    "question": "Instead of one monolithic CLAUDE.md, topic-specific rule files like testing.md and api-conventions.md can be organized in ____.",
+    "options": [".claude/rules/", ".claude/topics/", "docs/claude/", ".config/rules/"],
+    "answerIndex": 0,
+    "explanation": "The .claude/rules/ directory organizes topic-specific rule files (e.g., testing.md, api-conventions.md, deployment.md) as an alternative to a monolithic CLAUDE.md. The other paths are not the documented location."
+  },
+  {
+    "id": "d3-3.1-005",
+    "domain": 3,
+    "task": "3.1",
+    "type": "skill",
+    "question": "To verify which memory files are loaded and diagnose inconsistent behavior across sessions, use the ____ command.",
+    "options": ["/memory", "/context", "/files", "/debug"],
+    "answerIndex": 0,
+    "explanation": "The /memory command shows which memory files are loaded, which is the way to diagnose inconsistent behavior caused by configuration hierarchy issues. The other commands are not the documented mechanism for this."
+  },
+  {
+    "id": "d3-3.2-001",
+    "domain": 3,
+    "task": "3.2",
+    "type": "knowledge",
+    "question": "A custom slash command that should be available to every developer who clones the repository belongs in ____.",
+    "options": [".claude/commands/ in the project repository", "~/.claude/commands/ in each home directory", "CLAUDE.md at the project root", ".claude/config.json with a commands array"],
+    "answerIndex": 0,
+    "explanation": "Project-scoped commands live in .claude/commands/ and are shared via version control, so all developers get them on clone or pull. ~/.claude/commands/ is personal, CLAUDE.md holds instructions rather than command definitions, and a .claude/config.json commands array does not exist."
+  },
+  {
+    "id": "d3-3.2-002",
+    "domain": 3,
+    "task": "3.2",
+    "type": "knowledge",
+    "question": "Skills are defined in .claude/skills/ with ____ files that support frontmatter configuration.",
+    "options": ["SKILL.md", "skill.yaml", "manifest.json", "SKILL.toml"],
+    "answerIndex": 0,
+    "explanation": "Skills live in .claude/skills/ with SKILL.md files whose frontmatter supports options including context: fork, allowed-tools, and argument-hint. The other file names are not the skill definition format."
+  },
+  {
+    "id": "d3-3.2-003",
+    "domain": 3,
+    "task": "3.2",
+    "type": "skill",
+    "question": "A codebase-analysis skill produces verbose output that pollutes the main conversation. The frontmatter option that fixes this is ____.",
+    "options": ["context: fork", "allowed-tools: none", "argument-hint: verbose", "output: silent"],
+    "answerIndex": 0,
+    "explanation": "context: fork runs the skill in an isolated sub-agent context, so verbose or exploratory output does not pollute the main conversation. allowed-tools restricts tool access, argument-hint prompts for parameters, and output: silent is not a frontmatter option."
+  },
+  {
+    "id": "d3-3.2-004",
+    "domain": 3,
+    "task": "3.2",
+    "type": "skill",
+    "question": "To restrict a skill so it can only perform file write operations and no destructive actions, configure ____ in the SKILL.md frontmatter.",
+    "options": ["allowed-tools", "context: fork", "argument-hint", "paths"],
+    "answerIndex": 0,
+    "explanation": "allowed-tools in skill frontmatter restricts which tools are available during skill execution—for example, limiting to file write operations to prevent destructive actions. context: fork isolates context, argument-hint prompts for arguments, and paths belongs to .claude/rules/ frontmatter."
+  },
+  {
+    "id": "d3-3.2-005",
+    "domain": 3,
+    "task": "3.2",
+    "type": "skill",
+    "question": "To customize a team skill for personal use without affecting teammates, create ____.",
+    "options": [
+      "a personal variant in ~/.claude/skills/ with a different name",
+      "a git branch holding your modified skill",
+      "an override entry in .mcp.json",
+      "a duplicate in .claude/skills/ with the same name"
+    ],
+    "answerIndex": 0,
+    "explanation": "Personal skill customization means creating a variant in user-scoped ~/.claude/skills/ with a different name so the team's version is untouched. Branches would leak into version control, .mcp.json configures MCP servers, and a same-name duplicate in the project affects everyone."
+  },
+  {
+    "id": "d3-3.2-006",
+    "domain": 3,
+    "task": "3.2",
+    "type": "knowledge",
+    "question": "Choose a skill over CLAUDE.md when the content is ____.",
+    "options": [
+      "an on-demand, task-specific workflow rather than an always-loaded universal standard",
+      "shorter than one paragraph",
+      "shared by multiple repositories",
+      "written in a language other than English"
+    ],
+    "answerIndex": 0,
+    "explanation": "Skills are for on-demand invocation of task-specific workflows; CLAUDE.md is for always-loaded universal standards. Length, cross-repo sharing, and language are not the deciding criteria."
+  },
+  {
+    "id": "d3-3.3-001",
+    "domain": 3,
+    "task": "3.3",
+    "type": "knowledge",
+    "question": ".claude/rules/ files use YAML frontmatter with a ____ field containing glob patterns for conditional activation.",
+    "options": ["paths", "globs", "match", "files"],
+    "answerIndex": 0,
+    "explanation": "Rule files use a YAML frontmatter paths field with glob patterns (e.g., paths: [\"terraform/**/*\"]) so the rule loads only when editing matching files. The other field names are not the documented syntax."
+  },
+  {
+    "id": "d3-3.3-002",
+    "domain": 3,
+    "task": "3.3",
+    "type": "knowledge",
+    "question": "Path-scoped rules reduce irrelevant context and token usage because they ____.",
+    "options": [
+      "load only when editing files that match their glob patterns",
+      "compress conventions into fewer tokens",
+      "replace the system prompt entirely",
+      "are cached across sessions"
+    ],
+    "answerIndex": 0,
+    "explanation": "Path-scoped rules activate only when the files being edited match their glob patterns, keeping unrelated conventions out of context. They do not compress text, replace the system prompt, or rely on cross-session caching."
+  },
+  {
+    "id": "d3-3.3-003",
+    "domain": 3,
+    "task": "3.3",
+    "type": "skill",
+    "question": "Test files live next to their source throughout the codebase (e.g., Button.test.tsx beside Button.tsx). To apply test conventions to all of them automatically, the most maintainable approach is ____.",
+    "options": [
+      "a .claude/rules/ file with a glob like **/*.test.tsx",
+      "a CLAUDE.md file in every directory containing tests",
+      "a skill the developer invokes before writing tests",
+      "one section per directory in the root CLAUDE.md"
+    ],
+    "answerIndex": 0,
+    "explanation": "Glob-pattern rules apply conventions by file type regardless of directory location—exactly what spread-out test files need. Per-directory CLAUDE.md files are directory-bound and hard to maintain, manual skill invocation is not automatic, and root CLAUDE.md sections rely on inference."
+  },
+  {
+    "id": "d3-3.3-004",
+    "domain": 3,
+    "task": "3.3",
+    "type": "skill",
+    "question": "Choose path-specific rules over subdirectory CLAUDE.md files when conventions must apply to ____.",
+    "options": [
+      "files spread across many directories",
+      "a single self-contained package",
+      "only the repository root",
+      "files larger than a size threshold"
+    ],
+    "answerIndex": 0,
+    "explanation": "Path-specific rules with glob patterns shine when conventions span multiple directories (e.g., test files everywhere), which directory-bound CLAUDE.md files cannot easily cover. For a single self-contained directory, a subdirectory CLAUDE.md can suffice."
+  },
+  {
+    "id": "d3-3.3-005",
+    "domain": 3,
+    "task": "3.3",
+    "type": "skill",
+    "question": "To make Terraform conventions load only when editing infrastructure code, a rule file could declare ____.",
+    "options": [
+      "paths: [\"terraform/**/*\"]",
+      "scope: terraform",
+      "trigger: \"*.tf\" in the rule body",
+      "an @import of terraform.md in every rule"
+    ],
+    "answerIndex": 0,
+    "explanation": "YAML frontmatter path scoping such as paths: [\"terraform/**/*\"] loads the rule only when editing matching files. scope: and trigger: are not the documented fields, and @import does not provide conditional path-based activation."
+  },
+  {
+    "id": "d3-3.4-001",
+    "domain": 3,
+    "task": "3.4",
+    "type": "knowledge",
+    "question": "Plan mode is designed for tasks involving large-scale changes, multiple valid approaches, ____, and multi-file modifications.",
+    "options": ["architectural decisions", "single-line typo fixes", "read-only questions", "formatting-only changes"],
+    "answerIndex": 0,
+    "explanation": "Plan mode targets complex work: large-scale changes, multiple valid approaches, architectural decisions, and multi-file modifications. Simple well-scoped changes like a one-line fix are better served by direct execution."
+  },
+  {
+    "id": "d3-3.4-002",
+    "domain": 3,
+    "task": "3.4",
+    "type": "skill",
+    "question": "Adding a single date validation conditional to one function with a clear scope calls for ____.",
+    "options": ["direct execution", "plan mode", "a multi-agent pipeline", "a new MCP server"],
+    "answerIndex": 0,
+    "explanation": "Direct execution is appropriate for simple, well-scoped changes such as adding one validation check to one function. Plan mode would add overhead without value; the other options are drastically over-engineered."
+  },
+  {
+    "id": "d3-3.4-003",
+    "domain": 3,
+    "task": "3.4",
+    "type": "skill",
+    "question": "Restructuring a monolith into microservices—dozens of files, service boundary decisions—should start with ____.",
+    "options": [
+      "plan mode to explore the codebase and design an approach before making changes",
+      "direct execution with incremental changes revealing boundaries",
+      "direct execution with comprehensive upfront instructions",
+      "direct execution, switching to plan mode only if complexity emerges"
+    ],
+    "answerIndex": 0,
+    "explanation": "This is exactly what plan mode is for: large-scale changes with architectural decisions benefit from safe exploration and design before committing to changes, preventing costly rework. The complexity is already known upfront, so deferring plan mode or improvising boundaries risks rework."
+  },
+  {
+    "id": "d3-3.4-004",
+    "domain": 3,
+    "task": "3.4",
+    "type": "knowledge",
+    "question": "The ____ subagent isolates verbose discovery output and returns summaries, preserving the main conversation's context.",
+    "options": ["Explore", "Compact", "Archive", "Search"],
+    "answerIndex": 0,
+    "explanation": "The Explore subagent handles verbose discovery phases and returns summaries to the main conversation, preventing context window exhaustion during multi-phase tasks. Compact, Archive, and Search are not the named subagent for this."
+  },
+  {
+    "id": "d3-3.4-005",
+    "domain": 3,
+    "task": "3.4",
+    "type": "skill",
+    "question": "For a library migration affecting 45+ files, a sound workflow is plan mode for investigation followed by ____.",
+    "options": [
+      "direct execution of the planned approach",
+      "a second plan mode pass before every file",
+      "delegating all edits to an MCP server",
+      "manual edits without Claude"
+    ],
+    "answerIndex": 0,
+    "explanation": "Combining plan mode for investigation with direct execution for implementation is the recommended pattern: plan the migration once, then execute the planned approach. Re-planning per file wastes effort, and the other options abandon the workflow."
+  },
+  {
+    "id": "d3-3.5-001",
+    "domain": 3,
+    "task": "3.5",
+    "type": "knowledge",
+    "question": "When prose descriptions of a transformation are interpreted inconsistently, the most effective communication technique is ____.",
+    "options": [
+      "providing 2-3 concrete input/output examples",
+      "writing a longer prose description",
+      "raising the temperature parameter",
+      "switching to a different model"
+    ],
+    "answerIndex": 0,
+    "explanation": "Concrete input/output examples are the most effective way to communicate expected transformations when natural language descriptions produce inconsistent results. Longer prose often stays ambiguous, and temperature or model changes do not resolve specification ambiguity."
+  },
+  {
+    "id": "d3-3.5-002",
+    "domain": 3,
+    "task": "3.5",
+    "type": "knowledge",
+    "question": "Test-driven iteration with Claude means writing test suites first, then iterating by ____.",
+    "options": [
+      "sharing test failures to guide progressive improvement",
+      "deleting failing tests until the suite passes",
+      "asking Claude to rewrite the tests to match the code",
+      "running tests only after the final implementation"
+    ],
+    "answerIndex": 0,
+    "explanation": "In test-driven iteration you write tests covering expected behavior, edge cases, and performance first, then share test failures with Claude to guide each improvement round. Deleting or rewriting tests to fit the code defeats the purpose."
+  },
+  {
+    "id": "d3-3.5-003",
+    "domain": 3,
+    "task": "3.5",
+    "type": "knowledge",
+    "question": "The ____ pattern has Claude ask questions before implementing, surfacing considerations the developer may not have anticipated.",
+    "options": ["interview", "reflection", "chain-of-thought", "scaffold"],
+    "answerIndex": 0,
+    "explanation": "The interview pattern has Claude ask clarifying questions—about cache invalidation strategies, failure modes, and similar design considerations—before implementing solutions in unfamiliar domains. The other names are not this pattern."
+  },
+  {
+    "id": "d3-3.5-004",
+    "domain": 3,
+    "task": "3.5",
+    "type": "skill",
+    "question": "You found several bugs whose fixes interact with each other. You should ____.",
+    "options": [
+      "describe all of them in a single detailed message",
+      "fix them one at a time in sequential messages",
+      "open a separate session per bug",
+      "fix only the highest-severity one and ignore the rest"
+    ],
+    "answerIndex": 0,
+    "explanation": "When fixes interact, provide all issues in a single detailed message so Claude can account for the interactions. Sequential iteration is for independent problems; separate sessions lose shared context."
+  },
+  {
+    "id": "d3-3.5-005",
+    "domain": 3,
+    "task": "3.5",
+    "type": "skill",
+    "question": "A migration script mishandles null values. The most effective feedback is ____.",
+    "options": [
+      "specific test cases with example input and expected output for the null cases",
+      "a general reminder to be careful with edge cases",
+      "a request to rewrite the script from scratch",
+      "increasing max_tokens for longer answers"
+    ],
+    "answerIndex": 0,
+    "explanation": "Specific test cases with example input and expected output are the way to fix edge case handling like null values in migration scripts. Vague reminders produce inconsistent results, rewriting discards working parts, and max_tokens is unrelated."
+  },
+  {
+    "id": "d3-3.6-001",
+    "domain": 3,
+    "task": "3.6",
+    "type": "knowledge",
+    "question": "A CI job invoking Claude Code hangs waiting for interactive input. The fix is to add the ____ flag.",
+    "options": ["-p (--print)", "--batch", "--headless", "--no-input"],
+    "answerIndex": 0,
+    "explanation": "The -p (or --print) flag runs Claude Code in non-interactive mode: it processes the prompt, writes the result to stdout, and exits—exactly what CI pipelines need. --batch, --headless, and --no-input are not real flags."
+  },
+  {
+    "id": "d3-3.6-002",
+    "domain": 3,
+    "task": "3.6",
+    "type": "knowledge",
+    "question": "To make CI-invoked Claude Code produce machine-parseable structured findings, combine --output-format json with ____.",
+    "options": ["--json-schema", "--strict", "--parse", "--typed-output"],
+    "answerIndex": 0,
+    "explanation": "--output-format json together with --json-schema enforces structured output in CI contexts, enabling automated posting of findings as inline PR comments. The other flags do not exist."
+  },
+  {
+    "id": "d3-3.6-003",
+    "domain": 3,
+    "task": "3.6",
+    "type": "skill",
+    "question": "To avoid duplicate review comments when re-running a CI review after new commits, you should ____.",
+    "options": [
+      "include prior review findings in context and instruct Claude to report only new or still-unaddressed issues",
+      "delete all previous comments before each run",
+      "only review the newest commit's diff in isolation",
+      "cap the number of comments per run"
+    ],
+    "answerIndex": 0,
+    "explanation": "Including prior findings in context and instructing Claude to report only new or unaddressed issues prevents duplicates while preserving history. Deleting comments loses the audit trail, isolated diffs miss interactions with earlier changes, and comment caps hide findings arbitrarily."
+  },
+  {
+    "id": "d3-3.6-004",
+    "domain": 3,
+    "task": "3.6",
+    "type": "skill",
+    "question": "CI test generation keeps suggesting scenarios your suite already covers. The fix is to ____.",
+    "options": [
+      "provide the existing test files in context so generation avoids duplicates",
+      "lower the temperature to reduce creativity",
+      "ask for fewer tests per run",
+      "switch the CI job to the batch API"
+    ],
+    "answerIndex": 0,
+    "explanation": "Providing existing test files in context lets Claude see what is already covered and avoid duplicate scenarios. Temperature, test count limits, and the batch API do not give the model the knowledge it lacks."
+  },
+  {
+    "id": "d3-3.6-005",
+    "domain": 3,
+    "task": "3.6",
+    "type": "knowledge",
+    "question": "An independent review instance is more effective than the generating session at reviewing code because the generator ____.",
+    "options": [
+      "retains its reasoning context and is less likely to question its own decisions",
+      "has already consumed its token budget",
+      "cannot read files it created",
+      "is rate-limited after generation"
+    ],
+    "answerIndex": 0,
+    "explanation": "Session context isolation matters: a session that generated code retains the reasoning that produced it, making it less likely to question those decisions. An independent instance reviews without that bias. Token budgets, file access, and rate limits are not the reason."
+  },
+  {
+    "id": "d3-3.6-006",
+    "domain": 3,
+    "task": "3.6",
+    "type": "skill",
+    "question": "To improve CI test generation quality, document testing standards, valuable test criteria, and available fixtures in ____.",
+    "options": ["CLAUDE.md", "the workflow YAML", "a wiki page outside the repo", "each test file's header comment"],
+    "answerIndex": 0,
+    "explanation": "CLAUDE.md is the mechanism for providing project context—testing standards, fixture conventions, review criteria—to CI-invoked Claude Code, improving generation quality and reducing low-value output. Workflow YAML and external wikis are not loaded into Claude's context automatically."
+  }
+]

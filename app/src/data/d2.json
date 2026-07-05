@@ -1,0 +1,387 @@
+[
+  {
+    "id": "d2-2.1-001",
+    "domain": 2,
+    "task": "2.1",
+    "type": "knowledge",
+    "question": "The primary mechanism LLMs use to decide which tool to call is the tool's ____.",
+    "options": ["description", "position in the tool list", "response schema", "server name"],
+    "answerIndex": 0,
+    "explanation": "Tool descriptions are the primary mechanism LLMs use for tool selection. Minimal or ambiguous descriptions lead to unreliable selection among similar tools. List position, response schemas, and server names are not the deciding signal."
+  },
+  {
+    "id": "d2-2.1-002",
+    "domain": 2,
+    "task": "2.1",
+    "type": "skill",
+    "question": "An agent frequently calls get_customer when users ask about orders. Both tools have minimal one-line descriptions. The most effective first step is to ____.",
+    "options": [
+      "expand each tool's description with input formats, example queries, edge cases, and boundaries versus similar tools",
+      "add 5-8 few-shot examples of correct tool routing to the system prompt",
+      "build a keyword-based routing layer that pre-selects the tool",
+      "merge both tools into a single lookup_entity tool"
+    ],
+    "answerIndex": 0,
+    "explanation": "Minimal descriptions are the root cause of misrouting, so enriching them is the low-effort, high-leverage first fix. Few-shot examples add token overhead without fixing the underlying issue, a routing layer is over-engineered and bypasses the LLM's understanding, and consolidation is more effort than a first step warrants."
+  },
+  {
+    "id": "d2-2.1-003",
+    "domain": 2,
+    "task": "2.1",
+    "type": "knowledge",
+    "question": "Two tools named analyze_content and analyze_document with near-identical descriptions will most likely cause ____.",
+    "options": [
+      "misrouting between the tools",
+      "schema validation failures",
+      "increased response latency",
+      "duplicate tool execution"
+    ],
+    "answerIndex": 0,
+    "explanation": "Ambiguous or overlapping tool descriptions cause misrouting: the model cannot reliably differentiate which tool applies. The fix is renaming (e.g., analyze_content → extract_web_results) and writing clearly differentiated descriptions. Overlap does not itself cause schema errors, latency, or duplicate execution."
+  },
+  {
+    "id": "d2-2.1-004",
+    "domain": 2,
+    "task": "2.1",
+    "type": "skill",
+    "question": "A generic analyze_document tool is used inconsistently. The recommended improvement is to split it into ____.",
+    "options": [
+      "purpose-specific tools with defined input/output contracts (e.g., extract_data_points, summarize_content, verify_claim_against_source)",
+      "one tool per document file format",
+      "synchronous and asynchronous variants",
+      "a tool per supported language"
+    ],
+    "answerIndex": 0,
+    "explanation": "Splitting generic tools into purpose-specific tools with defined contracts makes each tool's role unambiguous and improves selection reliability. Splitting by file format, sync/async, or language does not address the ambiguity of what the tool is for."
+  },
+  {
+    "id": "d2-2.1-005",
+    "domain": 2,
+    "task": "2.1",
+    "type": "knowledge",
+    "question": "Even with well-written tool descriptions, tool selection can still be skewed by ____ in the system prompt.",
+    "options": [
+      "keyword-sensitive instructions that create unintended tool associations",
+      "the total number of paragraphs",
+      "the language the prompt is written in",
+      "markdown formatting choices"
+    ],
+    "answerIndex": 0,
+    "explanation": "System prompt wording affects tool selection: keyword-sensitive instructions can create unintended associations that override well-written tool descriptions. Reviewing the system prompt for such wording is part of diagnosing tool misrouting. Paragraph count, language, and markdown style are not the documented cause."
+  },
+  {
+    "id": "d2-2.1-006",
+    "domain": 2,
+    "task": "2.1",
+    "type": "skill",
+    "question": "A good tool description should differentiate the tool's purpose, expected inputs and outputs, and ____.",
+    "options": [
+      "when to use it versus similar alternatives",
+      "the programming language it is implemented in",
+      "its average execution time",
+      "the name of its maintainer"
+    ],
+    "answerIndex": 0,
+    "explanation": "Effective descriptions include the tool's purpose, input formats, example queries, edge cases, and boundary explanations of when to use it versus similar tools. Implementation language, execution time, and maintainer are irrelevant to model tool selection."
+  },
+  {
+    "id": "d2-2.2-001",
+    "domain": 2,
+    "task": "2.2",
+    "type": "knowledge",
+    "question": "MCP tools communicate failures back to the agent using the ____ flag pattern.",
+    "options": ["isError", "hasFailed", "errorState", "exception"],
+    "answerIndex": 0,
+    "explanation": "The MCP isError flag is the standard pattern for signaling tool failure back to the agent, letting the model reason about how to recover. The other names are not part of the MCP specification."
+  },
+  {
+    "id": "d2-2.2-002",
+    "domain": 2,
+    "task": "2.2",
+    "type": "knowledge",
+    "question": "Returning a uniform generic message like \"Operation failed\" for every tool error is problematic because it ____.",
+    "options": [
+      "prevents the agent from making appropriate recovery decisions",
+      "increases the response payload size",
+      "violates the MCP specification",
+      "causes the agent to retry indefinitely"
+    ],
+    "answerIndex": 0,
+    "explanation": "Uniform error responses hide whether an error is transient, validation-related, business-rule-related, or permission-related, so the agent cannot choose an appropriate recovery strategy (retry, fix input, escalate, or explain). It is not a spec violation, and payload size is irrelevant."
+  },
+  {
+    "id": "d2-2.2-003",
+    "domain": 2,
+    "task": "2.2",
+    "type": "skill",
+    "question": "A well-structured MCP error response should include an errorCategory, a human-readable description, and ____.",
+    "options": [
+      "an isRetryable boolean",
+      "a stack trace",
+      "the server's uptime",
+      "a compensation voucher code"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structured error metadata includes errorCategory (transient/validation/permission), an isRetryable boolean, and a human-readable description. The retryable flag prevents wasted retry attempts on non-retryable errors. Stack traces and server internals do not help the agent decide."
+  },
+  {
+    "id": "d2-2.2-004",
+    "domain": 2,
+    "task": "2.2",
+    "type": "skill",
+    "question": "For business rule violations (e.g., a refund outside policy), the tool response should include retriable: false and ____.",
+    "options": [
+      "a customer-friendly explanation the agent can communicate",
+      "an HTTP 500 status code",
+      "a silent empty result",
+      "an automatic escalation ticket ID"
+    ],
+    "answerIndex": 0,
+    "explanation": "Business errors should carry retriable: false plus a customer-friendly explanation so the agent can communicate the policy appropriately instead of retrying. Masking as a server error or empty result misleads the agent; creating tickets is a separate workflow decision."
+  },
+  {
+    "id": "d2-2.2-005",
+    "domain": 2,
+    "task": "2.2",
+    "type": "skill",
+    "question": "A query that succeeds but finds no matching records should be reported as ____.",
+    "options": [
+      "a valid empty result, distinct from an access failure",
+      "an error with isRetryable: true",
+      "a permission error",
+      "a transient error so the agent retries"
+    ],
+    "answerIndex": 0,
+    "explanation": "Valid empty results represent successful queries with no matches and must be distinguished from access failures that need retry decisions. Reporting empty results as errors triggers pointless retries and misleads the agent's reasoning."
+  },
+  {
+    "id": "d2-2.3-001",
+    "domain": 2,
+    "task": "2.3",
+    "type": "knowledge",
+    "question": "Giving an agent access to too many tools (e.g., 18 instead of 4-5) primarily degrades ____.",
+    "options": [
+      "tool selection reliability",
+      "network throughput",
+      "schema validation accuracy",
+      "context caching efficiency"
+    ],
+    "answerIndex": 0,
+    "explanation": "More tools increase decision complexity, degrading tool selection reliability. The principle is scoped tool access: give each agent only the tools needed for its role. Throughput, schema validation, and caching are not the primary concern."
+  },
+  {
+    "id": "d2-2.3-002",
+    "domain": 2,
+    "task": "2.3",
+    "type": "knowledge",
+    "question": "Agents given tools outside their specialization tend to ____.",
+    "options": [
+      "misuse them (e.g., a synthesis agent attempting web searches)",
+      "ignore them entirely",
+      "run them only when idle",
+      "delegate them back to the coordinator automatically"
+    ],
+    "answerIndex": 0,
+    "explanation": "Agents with out-of-role tools tend to misuse them—a synthesis agent attempting its own web searches instead of synthesizing. Restricting each subagent's tool set to its role prevents cross-specialization misuse. There is no automatic delegation of unused tools."
+  },
+  {
+    "id": "d2-2.3-003",
+    "domain": 2,
+    "task": "2.3",
+    "type": "knowledge",
+    "question": "Setting tool_choice to \"____\" guarantees the model calls some tool rather than returning conversational text.",
+    "options": ["any", "auto", "required_text", "all"],
+    "answerIndex": 0,
+    "explanation": "tool_choice: \"any\" forces the model to call a tool but lets it choose which one. \"auto\" allows the model to respond with plain text instead. Forced selection ({\"type\": \"tool\", \"name\": \"...\"}) goes further and mandates a specific tool. \"required_text\" and \"all\" are not valid values."
+  },
+  {
+    "id": "d2-2.3-004",
+    "domain": 2,
+    "task": "2.3",
+    "type": "skill",
+    "question": "To ensure extract_metadata always runs before any enrichment tools, configure ____.",
+    "options": [
+      "tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} for the first request, then process subsequent steps in follow-up turns",
+      "tool_choice: \"auto\" with a prompt hint",
+      "an alphabetical tool ordering so extract_metadata sorts first",
+      "a longer description for extract_metadata"
+    ],
+    "answerIndex": 0,
+    "explanation": "Forced tool selection guarantees a specific tool is called first; subsequent steps are then handled in follow-up turns. tool_choice: \"auto\" with hints is probabilistic, tool list ordering is not a sequencing mechanism, and description length does not enforce ordering."
+  },
+  {
+    "id": "d2-2.3-005",
+    "domain": 2,
+    "task": "2.3",
+    "type": "skill",
+    "question": "A synthesis agent needs frequent simple fact-checks (85% of verifications) that currently require costly round-trips through the coordinator. The best fix is to ____.",
+    "options": [
+      "give the synthesis agent a scoped verify_fact tool while routing complex verifications through the coordinator",
+      "give the synthesis agent full access to all web search tools",
+      "batch all verifications to the end of the synthesis pass",
+      "cache extra context proactively during initial research"
+    ],
+    "answerIndex": 0,
+    "explanation": "A scoped cross-role tool for the high-frequency simple case applies least privilege while preserving coordination for complex cases. Full search access over-provisions and violates separation of concerns, end-of-pass batching creates blocking dependencies, and speculative caching cannot reliably predict verification needs."
+  },
+  {
+    "id": "d2-2.3-006",
+    "domain": 2,
+    "task": "2.3",
+    "type": "skill",
+    "question": "Replacing a generic fetch_url tool with a load_document tool that validates document URLs is an example of ____.",
+    "options": [
+      "replacing generic tools with constrained alternatives",
+      "tool consolidation to reduce tool count",
+      "adding a routing classifier",
+      "prompt chaining"
+    ],
+    "answerIndex": 0,
+    "explanation": "Constrained alternatives narrow a generic capability to the specific need, reducing misuse—load_document only accepts validated document URLs. This is not consolidation (merging tools), a classifier, or a decomposition pattern."
+  },
+  {
+    "id": "d2-2.4-001",
+    "domain": 2,
+    "task": "2.4",
+    "type": "knowledge",
+    "question": "MCP servers that the whole team should share belong in ____, while personal experimental servers belong in ~/.claude.json.",
+    "options": ["the project-scoped .mcp.json", "the global /etc/mcp.json", "CLAUDE.md", ".claude/commands/"],
+    "answerIndex": 0,
+    "explanation": "Project-level .mcp.json is version-controlled and shared with the team; user-level ~/.claude.json is for personal or experimental servers. CLAUDE.md holds instructions, not server configs, and .claude/commands/ holds slash commands."
+  },
+  {
+    "id": "d2-2.4-002",
+    "domain": 2,
+    "task": "2.4",
+    "type": "skill",
+    "question": "To configure an MCP server with an authentication token without committing the secret, use ____ in .mcp.json.",
+    "options": [
+      "environment variable expansion such as ${GITHUB_TOKEN}",
+      "the token encrypted with the repository's public key",
+      "a plaintext token in a comment",
+      "a token stored inside CLAUDE.md"
+    ],
+    "answerIndex": 0,
+    "explanation": ".mcp.json supports environment variable expansion (e.g., ${GITHUB_TOKEN}), so credentials come from each developer's environment and are never committed. Encrypting into the repo or embedding tokens in files still risks exposure and is not the supported pattern."
+  },
+  {
+    "id": "d2-2.4-003",
+    "domain": 2,
+    "task": "2.4",
+    "type": "knowledge",
+    "question": "MCP ____ expose content catalogs (issue summaries, documentation hierarchies, database schemas) so agents can see available data without exploratory tool calls.",
+    "options": ["resources", "prompts", "hooks", "manifests"],
+    "answerIndex": 0,
+    "explanation": "MCP resources are the mechanism for exposing content catalogs, giving agents visibility into available data and reducing exploratory tool calls. Tools are for actions; hooks and manifests are not the MCP mechanism for this."
+  },
+  {
+    "id": "d2-2.4-004",
+    "domain": 2,
+    "task": "2.4",
+    "type": "skill",
+    "question": "Your agent keeps using the built-in Grep tool instead of a more capable MCP search tool. The recommended fix is to ____.",
+    "options": [
+      "enhance the MCP tool's description to explain its capabilities and outputs in detail",
+      "disable the Grep tool globally",
+      "rename the MCP tool to grep2",
+      "increase the MCP server's timeout"
+    ],
+    "answerIndex": 0,
+    "explanation": "When an agent prefers built-in tools over more capable MCP tools, the usual cause is an underspecified MCP tool description. Enhancing the description to explain capabilities and outputs guides selection. Disabling Grep removes a legitimately useful tool, and renaming or timeouts do not address selection."
+  },
+  {
+    "id": "d2-2.4-005",
+    "domain": 2,
+    "task": "2.4",
+    "type": "skill",
+    "question": "For a standard integration like Jira, the recommended approach is to ____.",
+    "options": [
+      "choose an existing community MCP server, reserving custom servers for team-specific workflows",
+      "always build a custom MCP server for full control",
+      "avoid MCP and call the REST API from prompts",
+      "embed Jira credentials in the system prompt"
+    ],
+    "answerIndex": 0,
+    "explanation": "Existing community MCP servers are preferred for standard integrations; custom implementations are reserved for team-specific workflows that community servers do not cover. Building custom for everything duplicates maintained work, and the other options are not viable patterns."
+  },
+  {
+    "id": "d2-2.4-006",
+    "domain": 2,
+    "task": "2.4",
+    "type": "knowledge",
+    "question": "When multiple MCP servers are configured, their tools are discovered at connection time and are ____.",
+    "options": [
+      "available simultaneously to the agent",
+      "enabled one server at a time",
+      "prioritized by configuration order with fallback",
+      "only available after explicit /enable commands"
+    ],
+    "answerIndex": 0,
+    "explanation": "Tools from all configured MCP servers are discovered at connection time and are simultaneously available to the agent. There is no one-at-a-time restriction, priority fallback ordering, or per-server enable step in normal operation."
+  },
+  {
+    "id": "d2-2.5-001",
+    "domain": 2,
+    "task": "2.5",
+    "type": "knowledge",
+    "question": "To find all files matching **/*.test.tsx, the appropriate built-in tool is ____.",
+    "options": ["Glob", "Grep", "Read", "Bash"],
+    "answerIndex": 0,
+    "explanation": "Glob matches file paths by name or extension patterns, making it right for finding files like **/*.test.tsx. Grep searches file contents, Read loads a file, and Bash is unnecessary when a dedicated tool fits."
+  },
+  {
+    "id": "d2-2.5-002",
+    "domain": 2,
+    "task": "2.5",
+    "type": "knowledge",
+    "question": "To locate every place a function name or error message appears across a codebase, the appropriate built-in tool is ____.",
+    "options": ["Grep", "Glob", "Edit", "Write"],
+    "answerIndex": 0,
+    "explanation": "Grep is the content search tool—it searches file contents for patterns like function names, error messages, or import statements. Glob matches file paths, and Edit/Write modify files."
+  },
+  {
+    "id": "d2-2.5-003",
+    "domain": 2,
+    "task": "2.5",
+    "type": "skill",
+    "question": "When Edit fails because the anchor text is not unique in the file, the reliable fallback is ____.",
+    "options": [
+      "Read the full file, then Write the modified content",
+      "run Edit repeatedly until it succeeds",
+      "use Bash with sed",
+      "delete the file and recreate it from memory"
+    ],
+    "answerIndex": 0,
+    "explanation": "Edit requires unique text matching; when matches are non-unique, the documented fallback is Read + Write: load the full file contents and write the modified version. Retrying Edit unchanged fails identically, and the other options are error-prone."
+  },
+  {
+    "id": "d2-2.5-004",
+    "domain": 2,
+    "task": "2.5",
+    "type": "skill",
+    "question": "The recommended way to build codebase understanding is to start with Grep to find entry points, then ____.",
+    "options": [
+      "use Read to follow imports and trace flows incrementally",
+      "read every file in the repository upfront",
+      "generate a full dependency graph with Bash first",
+      "ask the model to guess the architecture"
+    ],
+    "answerIndex": 0,
+    "explanation": "Incremental exploration—Grep to find entry points, then Read to follow imports and trace flows—builds understanding without flooding context. Reading all files upfront wastes context; the other options skip the systematic approach."
+  },
+  {
+    "id": "d2-2.5-005",
+    "domain": 2,
+    "task": "2.5",
+    "type": "skill",
+    "question": "To trace how a function is used across wrapper modules, first identify all exported names, then ____.",
+    "options": [
+      "search for each exported name across the codebase",
+      "read the wrapper modules top to bottom",
+      "rename the function and see what breaks",
+      "rely on the file naming convention"
+    ],
+    "answerIndex": 0,
+    "explanation": "Wrappers can re-export functionality under different names, so the reliable method is to enumerate exported names first and then Grep for each across the codebase. Reading files linearly misses call sites, and rename-and-break is destructive."
+  }
+]

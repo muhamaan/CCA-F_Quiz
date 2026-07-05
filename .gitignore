@@ -1,0 +1,16 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# local files
+prompts/
+# Copyrighted exam materials (keep local only)
+ExamGuide.pdf
+docs/exam_guide.txt

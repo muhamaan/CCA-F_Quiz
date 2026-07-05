@@ -1,0 +1,567 @@
+[
+  {
+    "id": "d1-1.1-001",
+    "domain": 1,
+    "task": "1.1",
+    "type": "knowledge",
+    "question": "In the agentic loop lifecycle, the loop should continue executing tools when stop_reason is \"____\".",
+    "options": ["tool_use", "end_turn", "max_tokens", "stop_sequence"],
+    "answerIndex": 0,
+    "explanation": "The agentic loop inspects stop_reason after each request: \"tool_use\" means Claude has requested a tool call, so the loop executes the tool and returns results for the next iteration. \"end_turn\" signals the task is complete and the loop should terminate. max_tokens and stop_sequence are other stop reasons but are not the signal to continue tool execution."
+  },
+  {
+    "id": "d1-1.1-002",
+    "domain": 1,
+    "task": "1.1",
+    "type": "knowledge",
+    "question": "The agentic loop should terminate its control flow when stop_reason is \"____\".",
+    "options": ["end_turn", "tool_use", "tool_result", "completed"],
+    "answerIndex": 0,
+    "explanation": "\"end_turn\" indicates Claude has finished reasoning and produced its final response, so the loop terminates. \"tool_use\" means the loop must continue by executing the requested tool. \"tool_result\" and \"completed\" are not stop_reason values."
+  },
+  {
+    "id": "d1-1.1-003",
+    "domain": 1,
+    "task": "1.1",
+    "type": "knowledge",
+    "question": "After executing a requested tool, the results must be ____ so the model can reason about its next action.",
+    "options": [
+      "appended to the conversation history",
+      "written to a shared database",
+      "summarized into the system prompt",
+      "cached for the next session"
+    ],
+    "answerIndex": 0,
+    "explanation": "Tool results are appended to the conversation history and returned to the model in the next iteration, allowing it to incorporate the new information into its reasoning. The system prompt is not modified mid-loop, and databases or session caches are not part of the core agentic loop lifecycle."
+  },
+  {
+    "id": "d1-1.1-004",
+    "domain": 1,
+    "task": "1.1",
+    "type": "knowledge",
+    "question": "The defining characteristic of an agentic loop, compared to a pre-configured decision tree, is that ____ decides which tool to call next based on context.",
+    "options": ["the model itself", "a routing classifier", "the tool schema", "a state machine"],
+    "answerIndex": 0,
+    "explanation": "Agentic systems rely on model-driven decision-making: Claude reasons about which tool to call next based on the accumulated context. Pre-configured decision trees, routing classifiers, and state machines are deterministic alternatives that do not adapt through model reasoning."
+  },
+  {
+    "id": "d1-1.1-005",
+    "domain": 1,
+    "task": "1.1",
+    "type": "skill",
+    "question": "Which of the following is an anti-pattern for determining when an agentic loop should stop?",
+    "options": [
+      "Parsing the assistant's natural language text for completion signals",
+      "Terminating when stop_reason is \"end_turn\"",
+      "Continuing while stop_reason is \"tool_use\"",
+      "Returning tool results to the model between iterations"
+    ],
+    "answerIndex": 0,
+    "explanation": "Parsing natural language signals (e.g., looking for phrases like \"I'm done\") to determine loop termination is an anti-pattern because it is brittle and unreliable. The correct mechanism is the structured stop_reason field: continue on \"tool_use\", terminate on \"end_turn\". Other anti-patterns include arbitrary iteration caps as the primary stopping mechanism and checking for assistant text content as a completion indicator."
+  },
+  {
+    "id": "d1-1.1-006",
+    "domain": 1,
+    "task": "1.1",
+    "type": "skill",
+    "question": "Setting an arbitrary ____ as the primary stopping mechanism for an agentic loop is considered an anti-pattern.",
+    "options": ["iteration cap", "system prompt", "tool description", "max_tokens value"],
+    "answerIndex": 0,
+    "explanation": "Arbitrary iteration caps as the primary stopping mechanism are an anti-pattern: they can cut off legitimate work or let the loop run pointlessly. The loop should stop based on stop_reason (\"end_turn\"). An iteration cap may exist as a safety net, but not as the primary termination logic."
+  },
+  {
+    "id": "d1-1.2-001",
+    "domain": 1,
+    "task": "1.2",
+    "type": "knowledge",
+    "question": "In a ____ architecture, a coordinator agent manages all inter-subagent communication, error handling, and information routing.",
+    "options": ["hub-and-spoke", "peer-to-peer", "pipeline", "event-driven mesh"],
+    "answerIndex": 0,
+    "explanation": "Hub-and-spoke architecture places the coordinator at the center: all subagent communication flows through it, enabling observability, consistent error handling, and controlled information flow. Peer-to-peer or mesh communication between subagents bypasses the coordinator and loses these guarantees."
+  },
+  {
+    "id": "d1-1.2-002",
+    "domain": 1,
+    "task": "1.2",
+    "type": "knowledge",
+    "question": "Subagents operate with isolated context, which means they ____.",
+    "options": [
+      "do not automatically inherit the coordinator's conversation history",
+      "share a common memory pool with all other subagents",
+      "receive the full conversation history by default",
+      "can only be invoked once per session"
+    ],
+    "answerIndex": 0,
+    "explanation": "Subagents run with isolated context and do not inherit the coordinator's conversation history automatically. Any context they need must be explicitly provided in their prompt. They do not share memory between invocations, and there is no once-per-session limit."
+  },
+  {
+    "id": "d1-1.2-003",
+    "domain": 1,
+    "task": "1.2",
+    "type": "knowledge",
+    "question": "A multi-agent research system produces reports covering only a narrow slice of a broad topic even though every subagent completes successfully. The most likely root cause is that the coordinator's ____ was too narrow.",
+    "options": ["task decomposition", "context window", "tool permission set", "output token limit"],
+    "answerIndex": 0,
+    "explanation": "When subagents each execute their assigned tasks correctly but the final output misses whole areas of the topic, the problem lies in what they were assigned: the coordinator decomposed the topic too narrowly, leading to incomplete coverage. Context windows, tool permissions, and token limits would produce different failure modes."
+  },
+  {
+    "id": "d1-1.2-004",
+    "domain": 1,
+    "task": "1.2",
+    "type": "skill",
+    "question": "A well-designed coordinator agent should analyze query requirements and ____ rather than always routing through the full pipeline.",
+    "options": [
+      "dynamically select which subagents to invoke",
+      "invoke every subagent in a fixed order",
+      "let subagents decide among themselves who runs",
+      "randomly sample a subset of subagents"
+    ],
+    "answerIndex": 0,
+    "explanation": "The coordinator's role includes deciding which subagents to invoke based on query complexity. Dynamically selecting subagents avoids unnecessary work for simple queries. Fixed full-pipeline routing wastes resources, and subagents deciding among themselves violates the hub-and-spoke pattern."
+  },
+  {
+    "id": "d1-1.2-005",
+    "domain": 1,
+    "task": "1.2",
+    "type": "skill",
+    "question": "To minimize duplication across parallel research subagents, the coordinator should ____.",
+    "options": [
+      "partition the research scope by assigning distinct subtopics or source types to each agent",
+      "give every agent the identical research prompt",
+      "have agents deduplicate their findings against each other directly",
+      "run agents sequentially so each can see previous results"
+    ],
+    "answerIndex": 0,
+    "explanation": "Partitioning research scope—assigning distinct subtopics or source types to each subagent—minimizes duplicated effort. Identical prompts guarantee overlap, direct agent-to-agent deduplication violates coordinator-mediated communication, and forcing sequential execution sacrifices parallelism without addressing scope overlap."
+  },
+  {
+    "id": "d1-1.2-006",
+    "domain": 1,
+    "task": "1.2",
+    "type": "skill",
+    "question": "In an iterative refinement loop, when the coordinator finds coverage gaps in the synthesis output, it should ____.",
+    "options": [
+      "re-delegate to search and analysis subagents with targeted queries, then re-invoke synthesis",
+      "lower the quality bar and accept the current synthesis",
+      "append a disclaimer about missing coverage to the final report",
+      "restart the entire research pipeline from scratch"
+    ],
+    "answerIndex": 0,
+    "explanation": "Iterative refinement means the coordinator evaluates synthesis output for gaps, re-delegates targeted queries to search and analysis subagents, and re-invokes synthesis until coverage is sufficient. Accepting gaps or merely disclaiming them fails the quality goal, and a full restart discards valid completed work."
+  },
+  {
+    "id": "d1-1.3-001",
+    "domain": 1,
+    "task": "1.3",
+    "type": "knowledge",
+    "question": "For a coordinator agent to spawn subagents, its allowedTools configuration must include \"____\".",
+    "options": ["Task", "Spawn", "Agent", "Delegate"],
+    "answerIndex": 0,
+    "explanation": "The Task tool is the mechanism for spawning subagents in the Agent SDK, so the coordinator's allowedTools must include \"Task\". \"Spawn\", \"Agent\", and \"Delegate\" are not the names of the subagent-spawning tool."
+  },
+  {
+    "id": "d1-1.3-002",
+    "domain": 1,
+    "task": "1.3",
+    "type": "knowledge",
+    "question": "Because subagents do not automatically inherit parent context, the context they need must be ____.",
+    "options": [
+      "explicitly provided in the subagent's prompt",
+      "loaded from a shared memory store",
+      "requested by the subagent via a callback tool",
+      "compressed into the coordinator's system prompt"
+    ],
+    "answerIndex": 0,
+    "explanation": "Subagent context must be explicitly provided in the prompt when the subagent is spawned—for example, passing web search results and document analysis outputs directly to a synthesis subagent. There is no automatic inheritance or shared memory between invocations."
+  },
+  {
+    "id": "d1-1.3-003",
+    "domain": 1,
+    "task": "1.3",
+    "type": "knowledge",
+    "question": "The AgentDefinition configuration for each subagent type includes descriptions, system prompts, and ____.",
+    "options": ["tool restrictions", "billing quotas", "model weights", "network policies"],
+    "answerIndex": 0,
+    "explanation": "AgentDefinition configures each subagent type with a description, a system prompt, and tool restrictions that scope which tools the subagent can use. Billing quotas, model weights, and network policies are not part of AgentDefinition."
+  },
+  {
+    "id": "d1-1.3-004",
+    "domain": 1,
+    "task": "1.3",
+    "type": "skill",
+    "question": "To run multiple subagents in parallel, the coordinator should ____.",
+    "options": [
+      "emit multiple Task tool calls in a single response",
+      "emit one Task tool call per turn across several turns",
+      "configure a parallelism flag in AgentDefinition",
+      "spawn one subagent that spawns the others"
+    ],
+    "answerIndex": 0,
+    "explanation": "Parallel subagent execution is achieved by emitting multiple Task tool calls in a single coordinator response; the calls then run concurrently. Spawning across separate turns forces sequential execution. There is no AgentDefinition parallelism flag, and chained spawning adds latency and complexity."
+  },
+  {
+    "id": "d1-1.3-005",
+    "domain": 1,
+    "task": "1.3",
+    "type": "skill",
+    "question": "When passing findings between agents, using structured data formats to separate content from metadata (source URLs, document names, page numbers) primarily serves to ____.",
+    "options": [
+      "preserve attribution through downstream processing",
+      "reduce the token cost of the handoff",
+      "encrypt sensitive fields in transit",
+      "make outputs compatible with vector databases"
+    ],
+    "answerIndex": 0,
+    "explanation": "Separating content from metadata in structured formats ensures source attribution survives as findings pass between agents—critical for cited reports. It is not primarily about token savings, encryption, or vector database compatibility."
+  },
+  {
+    "id": "d1-1.3-006",
+    "domain": 1,
+    "task": "1.3",
+    "type": "skill",
+    "question": "Coordinator prompts that enable subagent adaptability should specify ____ rather than step-by-step procedural instructions.",
+    "options": [
+      "research goals and quality criteria",
+      "exact tool call sequences",
+      "expected token budgets per step",
+      "the full list of URLs to visit"
+    ],
+    "answerIndex": 0,
+    "explanation": "Specifying research goals and quality criteria lets subagents adapt their approach to what they discover, while rigid procedural instructions prevent adaptation. Tool call sequences, token budgets, and fixed URL lists all over-constrain the subagent."
+  },
+  {
+    "id": "d1-1.4-001",
+    "domain": 1,
+    "task": "1.4",
+    "type": "knowledge",
+    "question": "When deterministic compliance is required (e.g., identity verification before financial operations), prompt instructions alone are insufficient because they have ____.",
+    "options": [
+      "a non-zero failure rate",
+      "too high a token cost",
+      "no effect on tool selection",
+      "a hard limit of five rules"
+    ],
+    "answerIndex": 0,
+    "explanation": "Prompt-based guidance is probabilistic: even strong instructions have a non-zero failure rate. When a business rule must hold every time—such as verifying identity before processing refunds—programmatic enforcement (hooks, prerequisite gates) is required. Token cost is not the issue, prompts do influence tool use, and there is no five-rule limit."
+  },
+  {
+    "id": "d1-1.4-002",
+    "domain": 1,
+    "task": "1.4",
+    "type": "skill",
+    "question": "Production data shows an agent sometimes calls process_refund without verifying the customer first. The most reliable fix is to ____.",
+    "options": [
+      "add a programmatic prerequisite that blocks process_refund until get_customer has returned a verified customer ID",
+      "strengthen the system prompt to state that verification is mandatory",
+      "add few-shot examples showing get_customer being called first",
+      "reduce the number of tools available to the agent"
+    ],
+    "answerIndex": 0,
+    "explanation": "When a specific tool sequence is required for critical business logic, programmatic enforcement provides deterministic guarantees. Prompt statements and few-shot examples rely on probabilistic LLM compliance, which is insufficient when errors have financial consequences. Reducing tool count addresses availability, not ordering."
+  },
+  {
+    "id": "d1-1.4-003",
+    "domain": 1,
+    "task": "1.4",
+    "type": "skill",
+    "question": "When a customer message contains several distinct issues, the recommended pattern is to decompose it into distinct items, investigate each ____, then synthesize a unified resolution.",
+    "options": [
+      "in parallel using shared context",
+      "sequentially in separate sessions",
+      "by forwarding each to a different human agent",
+      "only after the customer confirms priority order"
+    ],
+    "answerIndex": 0,
+    "explanation": "Multi-concern requests should be decomposed into distinct items and investigated in parallel using shared context before synthesizing one unified response. Separate sessions lose shared context, human forwarding defeats automation, and waiting for priority confirmation adds unnecessary friction."
+  },
+  {
+    "id": "d1-1.4-004",
+    "domain": 1,
+    "task": "1.4",
+    "type": "knowledge",
+    "question": "A structured handoff protocol for mid-process escalation to a human agent should include customer details, ____, and recommended actions.",
+    "options": ["root cause analysis", "the full raw conversation JSON", "model temperature settings", "the agent's system prompt"],
+    "answerIndex": 0,
+    "explanation": "Structured handoff summaries include customer details (e.g., customer ID), root cause analysis, relevant amounts, and recommended actions—because the receiving human often lacks access to the conversation transcript. Raw JSON dumps, temperature settings, and system prompts do not help a human act quickly."
+  },
+  {
+    "id": "d1-1.4-005",
+    "domain": 1,
+    "task": "1.4",
+    "type": "knowledge",
+    "question": "The key difference between programmatic enforcement and prompt-based guidance for workflow ordering is that programmatic enforcement is ____.",
+    "options": ["deterministic", "cheaper to implement", "more flexible at runtime", "invisible to the agent"],
+    "answerIndex": 0,
+    "explanation": "Hooks and prerequisite gates enforce workflow ordering deterministically—the blocked action cannot occur—whereas prompt-based guidance is probabilistic. Programmatic enforcement is not necessarily cheaper or more flexible; its value is the guarantee."
+  },
+  {
+    "id": "d1-1.5-001",
+    "domain": 1,
+    "task": "1.5",
+    "type": "knowledge",
+    "question": "In the Agent SDK, a ____ hook intercepts tool results so they can be transformed before the model processes them.",
+    "options": ["PostToolUse", "PreCompletion", "OnMessage", "AfterSession"],
+    "answerIndex": 0,
+    "explanation": "PostToolUse hooks fire after a tool executes, allowing the result to be transformed—for example, normalizing data formats—before the model sees it. The other names are not Agent SDK hook patterns for this purpose."
+  },
+  {
+    "id": "d1-1.5-002",
+    "domain": 1,
+    "task": "1.5",
+    "type": "skill",
+    "question": "Different MCP tools return dates as Unix timestamps, ISO 8601 strings, and numeric status codes. The recommended way to give the agent consistent data is to ____.",
+    "options": [
+      "implement a PostToolUse hook that normalizes the formats before the agent processes them",
+      "instruct the agent in the system prompt to convert formats itself",
+      "add a normalization step to every tool's description",
+      "fine-tune the model on the heterogeneous formats"
+    ],
+    "answerIndex": 0,
+    "explanation": "A PostToolUse hook deterministically normalizes heterogeneous data formats from different MCP tools before the model processes them. Prompt-based conversion is probabilistic and wastes reasoning effort, tool descriptions do not transform data, and fine-tuning is out of scope and disproportionate."
+  },
+  {
+    "id": "d1-1.5-003",
+    "domain": 1,
+    "task": "1.5",
+    "type": "skill",
+    "question": "A business rule requires that refunds above $500 must never be processed automatically. The recommended implementation is ____.",
+    "options": [
+      "a tool call interception hook that blocks the refund and redirects to a human escalation workflow",
+      "a system prompt instruction stating the $500 limit",
+      "a few-shot example of declining a large refund",
+      "a warning added to the process_refund tool description"
+    ],
+    "answerIndex": 0,
+    "explanation": "Hooks that intercept outgoing tool calls provide deterministic guarantees: a refund exceeding the threshold is blocked and redirected to human escalation every time. Prompt instructions, few-shot examples, and tool description warnings all rely on probabilistic compliance, which is inappropriate when the rule must never be violated."
+  },
+  {
+    "id": "d1-1.5-004",
+    "domain": 1,
+    "task": "1.5",
+    "type": "knowledge",
+    "question": "Choose hooks over prompt-based enforcement when business rules require ____.",
+    "options": ["guaranteed compliance", "lower latency", "natural language flexibility", "fewer lines of code"],
+    "answerIndex": 0,
+    "explanation": "The distinction is deterministic guarantees (hooks) versus probabilistic compliance (prompt instructions). When a rule must hold in 100% of cases, hooks are the right mechanism. Latency, flexibility, and code size are not the deciding factors."
+  },
+  {
+    "id": "d1-1.5-005",
+    "domain": 1,
+    "task": "1.5",
+    "type": "knowledge",
+    "question": "Hook patterns in the Agent SDK can intercept ____ to enforce compliance rules before an action executes.",
+    "options": ["outgoing tool calls", "incoming user messages only", "the model's chain of thought", "HTTP response headers"],
+    "answerIndex": 0,
+    "explanation": "Tool call interception hooks examine outgoing tool calls (name and arguments) and can block or redirect policy-violating actions—such as refunds above a threshold—before they execute. Hooks do not operate on the model's internal reasoning or transport-level headers."
+  },
+  {
+    "id": "d1-1.6-001",
+    "domain": 1,
+    "task": "1.6",
+    "type": "knowledge",
+    "question": "Breaking a task into a fixed sequence of steps where each step's output feeds the next is called ____.",
+    "options": ["prompt chaining", "dynamic decomposition", "context forking", "speculative execution"],
+    "answerIndex": 0,
+    "explanation": "Prompt chaining is a fixed sequential pipeline—for example, analyzing each file individually and then running a cross-file integration pass. Dynamic (adaptive) decomposition, by contrast, generates subtasks based on intermediate findings. Context forking and speculative execution are different concepts."
+  },
+  {
+    "id": "d1-1.6-002",
+    "domain": 1,
+    "task": "1.6",
+    "type": "skill",
+    "question": "Prompt chaining suits predictable multi-aspect reviews, whereas ____ suits open-ended investigation tasks.",
+    "options": [
+      "dynamic adaptive decomposition based on intermediate findings",
+      "a larger context window",
+      "forced tool selection",
+      "batch processing"
+    ],
+    "answerIndex": 0,
+    "explanation": "The selection rule is: fixed sequential pipelines (prompt chaining) for predictable workflows, dynamic adaptive decomposition for open-ended investigations where subtasks depend on what is discovered at each step. Context window size, tool_choice, and batch processing do not address decomposition strategy."
+  },
+  {
+    "id": "d1-1.6-003",
+    "domain": 1,
+    "task": "1.6",
+    "type": "skill",
+    "question": "To avoid attention dilution in a large code review, split the work into per-file local analysis passes plus ____.",
+    "options": [
+      "a separate cross-file integration pass",
+      "a final pass by a human reviewer",
+      "a repeated run of the same full review",
+      "an automatic style-only pass"
+    ],
+    "answerIndex": 0,
+    "explanation": "The recommended pattern splits large reviews into per-file passes for local issues and a separate cross-file integration pass for data flow across files. This preserves consistent attention depth. Re-running the same full review repeats the attention dilution problem, and the other options address different concerns."
+  },
+  {
+    "id": "d1-1.6-004",
+    "domain": 1,
+    "task": "1.6",
+    "type": "skill",
+    "question": "For an open-ended task like \"add comprehensive tests to a legacy codebase\", the recommended first step is to ____.",
+    "options": [
+      "map the codebase structure and identify high-impact areas before creating a prioritized plan",
+      "start writing tests for the first file alphabetically",
+      "generate tests for every file in one large batch",
+      "ask the model to estimate total test count"
+    ],
+    "answerIndex": 0,
+    "explanation": "Open-ended tasks should be decomposed by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered. Jumping straight to test writing or bulk generation skips the analysis needed for prioritization."
+  },
+  {
+    "id": "d1-1.6-005",
+    "domain": 1,
+    "task": "1.6",
+    "type": "knowledge",
+    "question": "The value of an adaptive investigation plan is that it generates subtasks based on ____.",
+    "options": [
+      "what is discovered at each step",
+      "a fixed template defined upfront",
+      "the number of available subagents",
+      "the remaining token budget"
+    ],
+    "answerIndex": 0,
+    "explanation": "Adaptive plans evolve: each discovery can spawn new subtasks, which is essential when the full scope cannot be known upfront. Fixed templates describe prompt chaining, and subagent count or token budget are resource constraints, not decomposition drivers."
+  },
+  {
+    "id": "d1-1.7-001",
+    "domain": 1,
+    "task": "1.7",
+    "type": "knowledge",
+    "question": "To continue a specific prior Claude Code conversation, use ____ with the session name.",
+    "options": ["--resume", "--continue-last", "--restore", "--attach"],
+    "answerIndex": 0,
+    "explanation": "Named session resumption uses --resume <session-name> to continue a specific prior conversation across work sessions. The other flags are not the documented mechanism for resuming a named session."
+  },
+  {
+    "id": "d1-1.7-002",
+    "domain": 1,
+    "task": "1.7",
+    "type": "knowledge",
+    "question": "____ creates independent branches from a shared analysis baseline so divergent approaches can be explored in parallel.",
+    "options": ["fork_session", "--resume", "/compact", "checkpoint_restore"],
+    "answerIndex": 0,
+    "explanation": "fork_session creates independent branches from a shared baseline—useful for comparing two testing strategies or refactoring approaches without repeating the initial analysis. --resume continues a single session, /compact reduces context usage, and checkpoint_restore is not the mechanism described in the exam guide."
+  },
+  {
+    "id": "d1-1.7-003",
+    "domain": 1,
+    "task": "1.7",
+    "type": "skill",
+    "question": "When resuming a session after files it previously analyzed have been modified, you should ____.",
+    "options": [
+      "inform the agent about the specific file changes for targeted re-analysis",
+      "always start a brand-new session",
+      "assume the agent detects changes automatically",
+      "delete the old session to avoid confusion"
+    ],
+    "answerIndex": 0,
+    "explanation": "Informing a resumed session about specific file changes enables targeted re-analysis instead of full re-exploration. The agent does not automatically detect that previously analyzed files changed. Starting fresh is only preferable when most of the prior context is stale."
+  },
+  {
+    "id": "d1-1.7-004",
+    "domain": 1,
+    "task": "1.7",
+    "type": "skill",
+    "question": "When prior tool results are largely stale, it is more reliable to ____ than to resume the old session.",
+    "options": [
+      "start a new session with a structured summary injected",
+      "resume and ask the agent to ignore old results",
+      "replay all previous tool calls automatically",
+      "increase the context window size"
+    ],
+    "answerIndex": 0,
+    "explanation": "Starting a new session with a structured summary is more reliable than resuming with stale tool results, which can mislead the model. Asking the model to ignore in-context data is unreliable, replaying tool calls is costly and may still be stale, and context size does not address staleness."
+  },
+  {
+    "id": "d1-1.7-005",
+    "domain": 1,
+    "task": "1.7",
+    "type": "skill",
+    "question": "You completed a large shared codebase analysis and want to compare two different refactoring strategies from that same starting point. The best mechanism is ____.",
+    "options": [
+      "using fork_session to create a parallel exploration branch for each strategy",
+      "running both strategies sequentially in one session",
+      "starting two fresh sessions and re-analyzing the codebase twice",
+      "using /compact between the two strategies"
+    ],
+    "answerIndex": 0,
+    "explanation": "fork_session lets you branch from the shared analysis baseline so each strategy is explored independently without re-doing the analysis. Sequential exploration in one session contaminates the second attempt with the first's context; fresh sessions duplicate the expensive analysis; /compact only reduces context usage."
+  },
+  {
+    "id": "d1-1.7-006",
+    "domain": 1,
+    "task": "1.7",
+    "type": "knowledge",
+    "question": "Choose session resumption over starting fresh when ____.",
+    "options": [
+      "the prior context is mostly still valid",
+      "the token budget is unlimited",
+      "the session is older than 24 hours",
+      "the task switches to a new codebase"
+    ],
+    "answerIndex": 0,
+    "explanation": "The decision rule is context validity: resume when prior context is mostly valid; start fresh with an injected summary when prior tool results are stale. Age alone and token budget are not the criteria, and a new codebase means the old context is irrelevant."
+  },
+  {
+    "id": "d1-1.2-007",
+    "domain": 1,
+    "task": "1.2",
+    "type": "skill",
+    "question": "Routing all subagent communication through the coordinator provides observability, consistent error handling, and ____.",
+    "options": [
+      "controlled information flow",
+      "lower total token usage",
+      "automatic retry of failed subagents",
+      "faster end-to-end latency"
+    ],
+    "answerIndex": 0,
+    "explanation": "Coordinator-mediated communication gives observability, consistent error handling, and controlled information flow between agents. It does not inherently reduce tokens or latency (it can add overhead), and retries are a separate design decision."
+  },
+  {
+    "id": "d1-1.1-007",
+    "domain": 1,
+    "task": "1.1",
+    "type": "skill",
+    "question": "Checking whether the assistant's response contains text content as a completion indicator is an anti-pattern because ____.",
+    "options": [
+      "assistant messages can contain both text and tool-use blocks, so text presence does not signal completion",
+      "text content is always empty in agentic loops",
+      "the API strips text from responses that include tool calls",
+      "text parsing is too slow for production loops"
+    ],
+    "answerIndex": 0,
+    "explanation": "A response can include explanatory text alongside tool-use blocks, so the presence of text does not mean the task is finished. The structured stop_reason field is the reliable signal. The API does not strip text from tool-calling responses, and performance is not the core issue."
+  },
+  {
+    "id": "d1-1.3-007",
+    "domain": 1,
+    "task": "1.3",
+    "type": "skill",
+    "question": "When invoking a synthesis subagent, the coordinator should include ____ directly in the subagent's prompt.",
+    "options": [
+      "the complete findings from prior agents (e.g., search results and document analyses)",
+      "only the original user query",
+      "a pointer to the coordinator's session ID",
+      "the names of the other subagents"
+    ],
+    "answerIndex": 0,
+    "explanation": "Because subagents have isolated context, the synthesis subagent must receive the complete findings from prior agents directly in its prompt. The user query alone is insufficient, and session IDs or agent names do not transfer the actual content."
+  },
+  {
+    "id": "d1-1.4-006",
+    "domain": 1,
+    "task": "1.4",
+    "type": "skill",
+    "question": "Escalation summaries matter because the receiving human agents typically ____.",
+    "options": [
+      "lack access to the conversation transcript",
+      "prefer to re-verify every fact themselves",
+      "are billed per token they read",
+      "can only receive plain-text messages"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structured handoff summaries (customer ID, root cause, refund amount, recommended action) are compiled because human agents often cannot see the agent's conversation transcript. Without the summary, the human must re-gather context from scratch, delaying resolution."
+  }
+]

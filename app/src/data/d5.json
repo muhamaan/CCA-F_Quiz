@@ -1,0 +1,347 @@
+[
+  {
+    "id": "d5-5.1-001",
+    "domain": 5,
+    "task": "5.1",
+    "type": "knowledge",
+    "question": "A key risk of progressive summarization is that ____ get condensed into vague summaries.",
+    "options": [
+      "numerical values, percentages, dates, and customer-stated expectations",
+      "system prompt instructions",
+      "tool schemas",
+      "assistant politeness markers"
+    ],
+    "answerIndex": 0,
+    "explanation": "Progressive summarization tends to blur precise transactional facts—amounts, percentages, dates, and what the customer explicitly said they expect. The mitigation is extracting such facts into a persistent \"case facts\" block included in each prompt, outside the summarized history."
+  },
+  {
+    "id": "d5-5.1-002",
+    "domain": 5,
+    "task": "5.1",
+    "type": "knowledge",
+    "question": "The \"lost in the middle\" effect means models reliably process information at the beginning and end of long inputs but may omit ____.",
+    "options": [
+      "findings from middle sections",
+      "the final paragraph",
+      "the system prompt",
+      "short inputs entirely"
+    ],
+    "answerIndex": 0,
+    "explanation": "Long inputs suffer position effects: content in the middle is more likely to be overlooked. Mitigations include placing key findings summaries at the beginning of aggregated inputs and organizing detailed results with explicit section headers."
+  },
+  {
+    "id": "d5-5.1-003",
+    "domain": 5,
+    "task": "5.1",
+    "type": "skill",
+    "question": "Order lookups return 40+ fields but only 5 matter to returns processing. To keep context healthy over a long session, you should ____.",
+    "options": [
+      "trim tool outputs to the relevant fields before they accumulate in context",
+      "increase the context window",
+      "let the model ignore the noise on its own",
+      "summarize the entire conversation after every turn"
+    ],
+    "answerIndex": 0,
+    "explanation": "Verbose tool results consume tokens disproportionately to their relevance, so trimming outputs to only the fields that matter (e.g., return-relevant order fields) prevents context bloat. Bigger windows delay rather than fix the problem, and constant full-history summarization risks losing precise facts."
+  },
+  {
+    "id": "d5-5.1-004",
+    "domain": 5,
+    "task": "5.1",
+    "type": "skill",
+    "question": "For a multi-issue support session, transactional facts like order IDs, amounts, and statuses should be ____.",
+    "options": [
+      "extracted into a persistent structured context layer included with each prompt",
+      "kept only in the summarized history",
+      "repeated by the customer when needed",
+      "stored solely in the backend database"
+    ],
+    "answerIndex": 0,
+    "explanation": "Extracting and persisting structured issue data into a separate context layer (a \"case facts\" block outside summarized history) protects precise values from summarization loss. Relying on summaries risks vague facts, and re-asking the customer damages the experience."
+  },
+  {
+    "id": "d5-5.1-005",
+    "domain": 5,
+    "task": "5.1",
+    "type": "skill",
+    "question": "When a downstream agent has a limited context budget, upstream agents should be modified to return ____.",
+    "options": [
+      "structured data (key facts, citations, relevance scores) instead of verbose content and reasoning chains",
+      "their full transcripts for completeness",
+      "compressed base64 blobs",
+      "links the downstream agent can fetch later"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structured outputs with key facts, citations, and relevance scores give downstream agents what they need within budget; verbose content and reasoning chains blow the budget. Base64 blobs are still tokens, and deferred fetching reintroduces the exploration cost."
+  },
+  {
+    "id": "d5-5.2-001",
+    "domain": 5,
+    "task": "5.2",
+    "type": "knowledge",
+    "question": "Appropriate escalation triggers include explicit customer requests for a human, inability to make meaningful progress, and ____.",
+    "options": [
+      "policy exceptions or gaps",
+      "any negative sentiment",
+      "low self-reported confidence scores",
+      "conversation length over ten turns"
+    ],
+    "answerIndex": 0,
+    "explanation": "Escalate when the customer asks for a human, when policy is ambiguous or silent on the request (e.g., competitor price matching when policy only covers own-site adjustments), or when progress stalls. Sentiment and self-reported confidence are unreliable proxies for complexity, and turn count is arbitrary."
+  },
+  {
+    "id": "d5-5.2-002",
+    "domain": 5,
+    "task": "5.2",
+    "type": "skill",
+    "question": "A customer explicitly demands a human agent. The agent should ____.",
+    "options": [
+      "escalate immediately without first attempting investigation",
+      "attempt one resolution before escalating",
+      "ask the customer to justify the request",
+      "escalate only if sentiment analysis confirms frustration"
+    ],
+    "answerIndex": 0,
+    "explanation": "Explicit customer requests for human agents should be honored immediately. If the customer merely expresses frustration while the issue is within the agent's capability, the agent can acknowledge the frustration and offer resolution—escalating if the customer reiterates the preference."
+  },
+  {
+    "id": "d5-5.2-003",
+    "domain": 5,
+    "task": "5.2",
+    "type": "knowledge",
+    "question": "Sentiment-based escalation and self-reported confidence scores are unreliable because they ____.",
+    "options": [
+      "are poor proxies for actual case complexity",
+      "are too expensive to compute",
+      "require labeled training data",
+      "only work in English"
+    ],
+    "answerIndex": 0,
+    "explanation": "Sentiment does not correlate with case complexity, and LLM self-reported confidence is poorly calibrated—agents can be confidently wrong on hard cases. The reliable approach is explicit escalation criteria with few-shot examples demonstrating when to escalate versus resolve autonomously."
+  },
+  {
+    "id": "d5-5.2-004",
+    "domain": 5,
+    "task": "5.2",
+    "type": "skill",
+    "question": "A customer lookup returns multiple matching accounts. The agent should ____.",
+    "options": [
+      "ask the customer for additional identifiers rather than selecting heuristically",
+      "pick the most recently active account",
+      "pick the account with the largest order history",
+      "merge the accounts before proceeding"
+    ],
+    "answerIndex": 0,
+    "explanation": "Multiple matches require clarification—requesting additional identifiers—because heuristic selection risks acting on the wrong account (misidentified refunds, privacy issues). Recency and order-history heuristics are exactly the anti-pattern, and merging accounts is a destructive overreach."
+  },
+  {
+    "id": "d5-5.3-001",
+    "domain": 5,
+    "task": "5.3",
+    "type": "skill",
+    "question": "A web search subagent times out. The error propagation that best enables coordinator recovery includes the failure type, the attempted query, partial results, and ____.",
+    "options": [
+      "potential alternative approaches",
+      "the subagent's full memory dump",
+      "a generic \"search unavailable\" status",
+      "an instruction to terminate the workflow"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structured error context—failure type, attempted query, partial results, and alternatives—lets the coordinator decide whether to retry with a modified query, try another approach, or proceed with partial results. Generic statuses hide context, and terminating the whole workflow on one failure is an anti-pattern."
+  },
+  {
+    "id": "d5-5.3-002",
+    "domain": 5,
+    "task": "5.3",
+    "type": "knowledge",
+    "question": "Silently suppressing a subagent error by returning empty results marked as successful is an anti-pattern because it ____.",
+    "options": [
+      "prevents any recovery and risks incomplete outputs being trusted",
+      "increases network traffic",
+      "violates the JSON schema",
+      "causes duplicate retries"
+    ],
+    "answerIndex": 0,
+    "explanation": "Marking failure as success removes the coordinator's ability to recover and lets incomplete research pass as complete. The symmetric anti-pattern is terminating the entire workflow on a single failure. Both extremes are wrong; structured error propagation is the correct middle."
+  },
+  {
+    "id": "d5-5.3-003",
+    "domain": 5,
+    "task": "5.3",
+    "type": "skill",
+    "question": "Subagents should implement local recovery for transient failures and propagate to the coordinator only ____.",
+    "options": [
+      "errors they cannot resolve, along with partial results and what was attempted",
+      "a heartbeat signal every few seconds",
+      "errors that occur more than three times",
+      "failures in other subagents they observe"
+    ],
+    "answerIndex": 0,
+    "explanation": "Local recovery within subagents handles transient failures (retries, backoff); only unresolvable errors go up, accompanied by what was attempted and any partial results. Arbitrary occurrence thresholds and cross-agent monitoring are not the pattern, and subagents do not observe each other in hub-and-spoke."
+  },
+  {
+    "id": "d5-5.3-004",
+    "domain": 5,
+    "task": "5.3",
+    "type": "skill",
+    "question": "When some sources were unavailable during research, the synthesis output should ____.",
+    "options": [
+      "include coverage annotations distinguishing well-supported findings from gap areas",
+      "omit the affected topics silently",
+      "present all findings with equal confidence",
+      "refuse to produce a report"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structuring synthesis output with coverage annotations—which findings are well-supported versus which topic areas have gaps due to unavailable sources—keeps the report honest and actionable. Silent omission and uniform confidence both mislead readers, and refusing wastes the valid partial results."
+  },
+  {
+    "id": "d5-5.4-001",
+    "domain": 5,
+    "task": "5.4",
+    "type": "knowledge",
+    "question": "A sign of context degradation in an extended exploration session is that the model starts referencing ____ instead of the specific classes it discovered earlier.",
+    "options": ["\"typical patterns\"", "exact line numbers", "test coverage numbers", "git commit hashes"],
+    "answerIndex": 0,
+    "explanation": "Degraded context shows up as inconsistent answers and generic references to \"typical patterns\" rather than the specific code discovered earlier. Countermeasures include scratchpad files recording key findings and subagent delegation for verbose exploration."
+  },
+  {
+    "id": "d5-5.4-002",
+    "domain": 5,
+    "task": "5.4",
+    "type": "skill",
+    "question": "To counteract context degradation across a long exploration, agents should maintain ____ recording key findings and reference them for subsequent questions.",
+    "options": ["scratchpad files", "longer system prompts", "duplicate sessions", "verbose chat summaries in every reply"],
+    "answerIndex": 0,
+    "explanation": "Scratchpad files persist key findings across context boundaries, so the agent can re-read facts instead of relying on degraded in-context memory. System prompt growth and per-reply summaries add token pressure rather than relieving it."
+  },
+  {
+    "id": "d5-5.4-003",
+    "domain": 5,
+    "task": "5.4",
+    "type": "skill",
+    "question": "For crash recovery in a multi-agent exploration, each agent exports structured state to a known location and the coordinator ____.",
+    "options": [
+      "loads a manifest on resume and injects it into agent prompts",
+      "restarts every agent from scratch",
+      "replays the full event log token by token",
+      "asks the user to summarize what happened"
+    ],
+    "answerIndex": 0,
+    "explanation": "Structured state persistence means agents export state (manifests) to known locations; on resume the coordinator loads the manifest and injects it into agent prompts, avoiding full re-exploration. Restarting from scratch or replaying logs wastes the completed work."
+  },
+  {
+    "id": "d5-5.4-004",
+    "domain": 5,
+    "task": "5.4",
+    "type": "skill",
+    "question": "When context fills with verbose discovery output during extended exploration in Claude Code, you can reduce context usage with ____.",
+    "options": ["/compact", "/memory", "/clear-tools", "--resume"],
+    "answerIndex": 0,
+    "explanation": "/compact reduces context usage during extended sessions when verbose discovery output accumulates. /memory shows loaded memory files, --resume continues sessions, and /clear-tools is not a real command. Also consider summarizing findings before spawning subagents for the next phase."
+  },
+  {
+    "id": "d5-5.5-001",
+    "domain": 5,
+    "task": "5.5",
+    "type": "knowledge",
+    "question": "An aggregate accuracy metric like \"97% overall\" is risky because it may mask ____.",
+    "options": [
+      "poor performance on specific document types or fields",
+      "the cost of the extraction pipeline",
+      "duplicate documents in the dataset",
+      "the model version used"
+    ],
+    "answerIndex": 0,
+    "explanation": "Aggregate metrics hide segment-level failures: accuracy must be analyzed by document type and field to verify consistent performance across all segments before reducing human review. A 97% overall figure can coexist with terrible accuracy on one critical document type."
+  },
+  {
+    "id": "d5-5.5-002",
+    "domain": 5,
+    "task": "5.5",
+    "type": "skill",
+    "question": "Even after automating high-confidence extractions, ongoing error measurement should use ____.",
+    "options": [
+      "stratified random sampling of high-confidence extractions",
+      "review of only the flagged low-confidence items",
+      "an annual full audit",
+      "customer complaints as the signal"
+    ],
+    "answerIndex": 0,
+    "explanation": "Stratified random sampling of high-confidence extractions measures error rates where review was removed and detects novel error patterns early. Reviewing only low-confidence items leaves the automated segment unmonitored, and annual audits or complaint-driven detection find problems far too late."
+  },
+  {
+    "id": "d5-5.5-003",
+    "domain": 5,
+    "task": "5.5",
+    "type": "skill",
+    "question": "Field-level confidence scores should be calibrated using ____ before they drive review routing thresholds.",
+    "options": [
+      "labeled validation sets",
+      "the model's own self-assessment",
+      "production traffic volume",
+      "developer intuition"
+    ],
+    "answerIndex": 0,
+    "explanation": "Confidence scores only support routing decisions once calibrated against labeled validation sets—raw self-reported confidence is poorly calibrated. Extractions with low confidence or ambiguous/contradictory sources are then routed to human review, prioritizing limited reviewer capacity."
+  },
+  {
+    "id": "d5-5.6-001",
+    "domain": 5,
+    "task": "5.6",
+    "type": "knowledge",
+    "question": "Source attribution is commonly lost during multi-agent synthesis when findings are ____.",
+    "options": [
+      "compressed in summarization steps without preserving claim-source mappings",
+      "passed as structured JSON",
+      "annotated with publication dates",
+      "rendered as tables"
+    ],
+    "answerIndex": 0,
+    "explanation": "Summarization compresses findings, and unless structured claim-source mappings (source URLs, document names, excerpts) are explicitly preserved and merged through synthesis, attribution disappears. Structured formats, dates, and tables are protections, not causes."
+  },
+  {
+    "id": "d5-5.6-002",
+    "domain": 5,
+    "task": "5.6",
+    "type": "skill",
+    "question": "Two credible sources report different statistics for the same fact. The synthesis should ____.",
+    "options": [
+      "include both values, annotated with their source attribution",
+      "select the more recent value silently",
+      "average the two values",
+      "exclude the statistic entirely"
+    ],
+    "answerIndex": 0,
+    "explanation": "Conflicting statistics from credible sources should be annotated with source attribution rather than arbitrarily selecting one value—letting the coordinator decide how to reconcile before synthesis, and structuring reports to distinguish well-established from contested findings. Averaging fabricates a number no source reported."
+  },
+  {
+    "id": "d5-5.6-003",
+    "domain": 5,
+    "task": "5.6",
+    "type": "skill",
+    "question": "Requiring publication or data collection dates in subagent outputs prevents ____.",
+    "options": [
+      "temporal differences being misinterpreted as contradictions",
+      "duplicate source fetching",
+      "context window overflow",
+      "citation formatting errors"
+    ],
+    "answerIndex": 0,
+    "explanation": "Two sources measured at different times can legitimately differ; without dates, synthesis may flag them as contradictory. Requiring publication/collection dates in structured outputs enables correct temporal interpretation. It does not address fetching, context size, or formatting."
+  },
+  {
+    "id": "d5-5.6-004",
+    "domain": 5,
+    "task": "5.6",
+    "type": "skill",
+    "question": "In synthesis outputs, different content types should be ____.",
+    "options": [
+      "rendered appropriately—financial data as tables, news as prose, technical findings as structured lists",
+      "converted to a single uniform format",
+      "kept in their source documents' original layouts",
+      "limited to plain paragraphs for consistency"
+    ],
+    "answerIndex": 0,
+    "explanation": "Rendering each content type in its natural form—tables for financial data, prose for news, structured lists for technical findings—communicates better than forcing a uniform format. Uniform conversion is the documented anti-pattern."
+  }
+]
